@@ -41,4 +41,9 @@ async function run() {
   }
 }
 
-run();
+// Esegui solo se chiamato come script principale
+if (require.main === module) {
+  run();
+}
+
+export { run };
