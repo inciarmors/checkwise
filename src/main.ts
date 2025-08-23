@@ -41,7 +41,9 @@ async function run() {
   }
 }
 
+
 // Esegui solo se chiamato come script principale
+/* istanbul ignore next */
 if (require.main === module) {
   run();
 }

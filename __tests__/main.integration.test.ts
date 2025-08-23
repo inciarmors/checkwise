@@ -100,4 +100,22 @@ describe('Checkwise Action Integration', () => {
     await run();
     expect(core.setFailed).toHaveBeenCalled();
   });
+  it('uses default config-path if not provided', async () => {
+    (core.getInput as jest.Mock).mockImplementation((name: string) => {
+      if (name === 'github-token') return 'token';
+      if (name === 'config-path') return '';
+      return '';
+    });
+    octokit.rest.pulls.listFiles.mockResolvedValueOnce({ data: [{ filename: 'src/index.ts' }] });
+    octokit.rest.issues.listComments.mockResolvedValueOnce({ data: [] });
+    octokit.rest.issues.createComment.mockResolvedValueOnce({});
+    await run();
+    expect(core.getInput).toHaveBeenCalledWith('config-path');
+  });
+
+  it('calls setFailed if PR number is missing', async () => {
+    (github.context as any).payload = {};
+    await run();
+    expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/Pull Request/));
+  });
 });

@@ -25,6 +25,10 @@ options:
 `;
 
 describe('loadConfig', () => {
+  it('lancia errore se "require" non è un array', () => {
+    fs.writeFileSync(TMP, 'checklists:\n  - when: ["src/**/*.ts"]\n    require: "not-an-array"');
+    expect(() => loadConfig(TMP)).toThrow(/require.*array/);
+  });
   afterEach(() => {
     if (fs.existsSync(TMP)) fs.unlinkSync(TMP);
   });
@@ -54,5 +58,11 @@ describe('loadConfig', () => {
   it('lancia errore su YAML malformato', () => {
     fs.writeFileSync(TMP, 'checklists: [');
     expect(() => loadConfig(TMP)).toThrow(/Impossibile leggere/);
+  });
+  it('lancia errore se YAML vuoto o non oggetto', () => {
+    fs.writeFileSync(TMP, 'null');
+    expect(() => loadConfig(TMP)).toThrow(/vuoto o non valido/);
+    fs.writeFileSync(TMP, '42');
+    expect(() => loadConfig(TMP)).toThrow(/vuoto o non valido/);
   });
 });

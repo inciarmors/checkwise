@@ -103,4 +103,31 @@ describe('github.ts', () => {
       body: 'updated',
     });
   });
+
+  it('throws a clear error on rate limit exceeded', async () => {
+  octokit.rest.pulls.listFiles.mockRejectedValueOnce({
+    status: 403,
+    message: 'API rate limit exceeded for user',
+  });
+  await expect(githubApi.getChangedFiles('token', 42)).rejects.toThrow(
+    /GitHub API rate limit exceeded/
+  );
+  });
+
+  it('retries on network error and eventually throws', async () => {
+  octokit.rest.pulls.listFiles
+    .mockRejectedValueOnce({ code: 'ECONNRESET' })
+    .mockRejectedValueOnce({ code: 'ECONNRESET' })
+    .mockRejectedValueOnce({ code: 'ECONNRESET' }); // 3 tentativi
+
+  await expect(githubApi.getChangedFiles('token', 42)).rejects.toThrow(
+    /Network error while contacting GitHub API/
+  );
+  });
+
+
+ it('rethrows unknown errors', async () => {
+  octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error('Some other error'));
+  await expect(githubApi.getChangedFiles('token', 42)).rejects.toThrow('Some other error');
+ });
 });
