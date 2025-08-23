@@ -6,11 +6,20 @@ jest.mock('fs', () => {
   const originalFs = jest.requireActual('fs');
   return {
     ...originalFs,
-    readFileSync: () => `
+    readFileSync: (path: string, ...args: any[]) => {
+      if (
+        typeof path === 'string' &&
+        path.includes('integration-config.yml')
+      ) {
+        return `
 checklists:
   - when: ["src/**/*.ts"]
     require: ["Test coverage > 90%"]
-`,
+`;
+      }
+      // Per tutti gli altri file, usa il comportamento reale
+      return originalFs.readFileSync(path, ...args);
+    },
   };
 });
 
