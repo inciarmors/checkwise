@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "tsc",
+    "build": "tsc && ncc build src/main.ts -o dist",
     "dev": "tsc --watch"
   },
   "keywords": [],
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/micromatch": "^4.0.9",
     "@types/node": "^24.3.0",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.1",
