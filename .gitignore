@@ -1,33 +1,91 @@
-# Node modules
+# ============================================================================
+# GitHub Action - Checkwise .gitignore
+# Ottimizzato per includere solo i file necessari per il funzionamento
+# ============================================================================
+
+# Node.js
 node_modules/
-
-# Build output
-dist/
-
-# Test coverage
-coverage/
-
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+
+# Test Coverage (generato dai test)
+coverage/
+.nyc_output/
+
+# Build temporanei (ECCETTO dist/ che è richiesto per GitHub Actions)
+lib/
+build/
+out/
+*.tsbuildinfo
+# NOTA: dist/ NON è ignorato perché contiene il codice compilato necessario per l'action
+
+# Cache
+.npm
+.eslintcache
+.jest/
+
+# Logs
+*.log
+logs/
+
+# Environment files (contengono segreti)
+.env
+.env.*
+!.env.example
 
 # OS files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+*~
 
-# TypeScript
-*.tsbuildinfo
-
-# Env files
-.env
-.env.*
-
-# Jest cache
-.jest/
-
-# VSCode settings
+# IDE/Editor files
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
 
-# Misc
-*.log
+# Development files (non necessari per l'action)
+TODO.txt
+COMPLETITIONCHECKLIST.md
+notes.md
+dev-notes/
+
+# Test fixtures temporanei (mantieni fixtures/ per esempi)
+fixtures/tmp/
+__tests__/tmp*/
+*.tmp
+*.temp
+
+# Distribution preparation
+*.tgz
+*.tar.gz
+
+# Local development
+.local/
+local/
+
+# Backup files
+*.bak
+*.backup
+
+# ============================================================================
+# NOTA: File inclusi per il funzionamento della GitHub Action:
+# - action.yml (metadata action)
+# - dist/ (codice compilato - RICHIESTO)
+# - src/ (sorgenti TypeScript)
+# - package.json & package-lock.json (dipendenze)
+# - README.MD (documentazione)
+# - docs/ & examples/ (documentazione e esempi)
+# - .github/ (CI/CD workflows)
+# - tsconfig.json & jest.config.js (configurazione build/test)
+# ============================================================================

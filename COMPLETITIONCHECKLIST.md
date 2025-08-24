@@ -3,8 +3,8 @@
 ## 🔧 Technical Completeness
 - [x] Improve test coverage for github.ts (currently 17%)
 - [X] End-to-end integration tests with complete GitHub API mocks
-- [ ] Robust error handling for rate limiting and network failures
-- [ ] More granular input validation for action inputs
+- [x] Robust error handling for rate limiting and network failures
+- [x] More granular input validation for action inputs
 
 ## ✨ Advanced Features
 - [ ] Checklist state preservation when updating comments
