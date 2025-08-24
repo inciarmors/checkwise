@@ -1,0 +1,14 @@
+name: 'Checkwise'
+description: 'Dynamic PR checklists based on changed files'
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+    default: ${{ github.token }}
+  config-path:
+    description: 'Path to config file'
+    required: false
+    default: '.github/scope-mate.yml'
+runs:
+  using: 'node20'
+  main: 'dist/main.js'
