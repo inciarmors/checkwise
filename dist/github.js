@@ -131,4 +131,3 @@ async function updateComment(token, commentId, body) {
         body,
     }));
 }
-//# sourceMappingURL=github.js.map

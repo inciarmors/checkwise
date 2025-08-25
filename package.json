@@ -1,17 +1,36 @@
 {
   "name": "checkwise",
   "version": "1.0.0",
-  "description": "**Checklist dinamiche per Pull Request basate sui file modificati**",
-  "main": "index.js",
+  "description": "Generate dynamic Pull Request checklists based on changed file paths using declarative YAML configuration",
+  "main": "dist/main.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "tsc && ncc build src/main.ts -o dist",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist/ && rm -rf coverage/"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "github-action",
+    "pull-request",
+    "checklist",
+    "code-review",
+    "automation",
+    "yaml",
+    "typescript",
+    "ci-cd"
+  ],
+  "author": "inciarmors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inciarmors/checkwise.git"
+  },
+  "bugs": {
+    "url": "https://github.com/inciarmors/checkwise/issues"
+  },
+  "homepage": "https://github.com/inciarmors/checkwise#readme",
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",

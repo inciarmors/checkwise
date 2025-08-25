@@ -1,6 +1,6 @@
 # ============================================================================
 # GitHub Action - Checkwise .gitignore
-# Ottimizzato per includere solo i file necessari per il funzionamento
+# Ottimizzato per pubblicazione su GitHub Marketplace
 # ============================================================================
 
 # Node.js
@@ -10,21 +10,29 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# Test Coverage (generato dai test)
+# Test Coverage (generato dai test, non necessario per production)
 coverage/
 .nyc_output/
+*.lcov
 
 # Build temporanei (ECCETTO dist/ che è richiesto per GitHub Actions)
 lib/
 build/
 out/
 *.tsbuildinfo
-# NOTA: dist/ NON è ignorato perché contiene il codice compilato necessario per l'action
 
-# Cache
+# Source maps e file di definizione TypeScript (contengono percorsi sensibili)
+dist/*.map
+dist/*.d.ts
+dist/*.d.ts.map
+*.js.map
+*.d.ts.map
+
+# Cache e file temporanei
 .npm
 .eslintcache
 .jest/
+.cache/
 
 # Logs
 *.log
@@ -54,38 +62,71 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 
-# Development files (non necessari per l'action)
+# Development files (già rimossi, ma preveniamo futuri re-add)
 TODO.txt
 COMPLETITIONCHECKLIST.md
+PUBLICATION-ROADMAP.md
 notes.md
 dev-notes/
+.development/
+development/
 
 # Test fixtures temporanei (mantieni fixtures/ per esempi)
 fixtures/tmp/
+fixtures/temp/
 __tests__/tmp*/
+__tests__/temp*/
 *.tmp
 *.temp
+
+# Development dependencies e configurazioni
+.mocharc.*
+.nycrc.*
+babel.config.*
+webpack.config.*
+rollup.config.*
 
 # Distribution preparation
 *.tgz
 *.tar.gz
+dist.zip
 
 # Local development
 .local/
 local/
+.dev/
 
 # Backup files
 *.bak
 *.backup
+*.orig
+
+# Security files
+.security/
+security-scan.json
+
+# Performance profiling
+*.cpuprofile
+*.heapprofile
 
 # ============================================================================
-# NOTA: File inclusi per il funzionamento della GitHub Action:
-# - action.yml (metadata action)
-# - dist/ (codice compilato - RICHIESTO)
-# - src/ (sorgenti TypeScript)
-# - package.json & package-lock.json (dipendenze)
-# - README.MD (documentazione)
-# - docs/ & examples/ (documentazione e esempi)
-# - .github/ (CI/CD workflows)
-# - tsconfig.json & jest.config.js (configurazione build/test)
+# INCLUSI per il funzionamento della GitHub Action:
+# ✅ action.yml (metadata GitHub Action)
+# ✅ dist/*.js (codice compilato JavaScript - RICHIESTO)
+# ✅ dist/index.js (entry point principale)
+# ✅ src/ (sorgenti TypeScript per riferimento)
+# ✅ package.json & package-lock.json (dipendenze)
+# ✅ README.MD (documentazione principale)
+# ✅ docs/ & examples/ (documentazione e configurazioni di esempio)
+# ✅ .github/ (CI/CD workflows)
+# ✅ tsconfig.json & jest.config.js (configurazione)
+# ✅ LICENSE (licenza MIT)
+# ✅ SECURITY.md, CONTRIBUTING.md (governance)
+# 
+# ESCLUSI per sicurezza e pulizia:
+# ❌ Source maps (.map files) - contengono percorsi sensibili
+# ❌ TypeScript definitions (.d.ts) - non necessari per esecuzione
+# ❌ File di sviluppo e test coverage
+# ❌ Cache, logs e file temporanei
+# ❌ Configurazioni IDE specifiche
 # ============================================================================

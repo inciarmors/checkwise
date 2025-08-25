@@ -1,14 +1,18 @@
 name: 'Checkwise'
-description: 'Dynamic PR checklists based on changed files'
+description: 'Generate dynamic Pull Request checklists based on changed file paths using declarative YAML configuration'
+author: 'inciarmors'
 inputs:
   github-token:
-    description: 'GitHub token'
+    description: 'GitHub token for API access'
     required: true
     default: ${{ github.token }}
   config-path:
-    description: 'Path to config file'
+    description: 'Path to YAML configuration file'
     required: false
-    default: '.github/scope-mate.yml'
+    default: '.github/checkwise.yml'
 runs:
   using: 'node20'
-  main: 'dist/main.js'
+  main: 'dist/index.js'
+branding:
+  icon: 'check-square'
+  color: 'blue'

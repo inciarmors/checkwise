@@ -22,4 +22,3 @@ function generateChecklistMarkdown(rules) {
     });
     return md.trim();
 }
-//# sourceMappingURL=checklist.js.map

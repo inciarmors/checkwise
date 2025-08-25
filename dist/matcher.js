@@ -17,4 +17,3 @@ function getMatchingRules(changedFilePaths, rules) {
         return (0, micromatch_1.default)(changedFilePaths, rule.when).length > 0;
     });
 }
-//# sourceMappingURL=matcher.js.map

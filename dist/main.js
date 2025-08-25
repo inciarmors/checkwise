@@ -160,4 +160,3 @@ async function run() {
 if (require.main === module) {
     run();
 }
-//# sourceMappingURL=main.js.map

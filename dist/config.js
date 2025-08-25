@@ -111,4 +111,3 @@ function loadConfig(path = '.github/scope-mate.yml') {
     }
     return raw;
 }
-//# sourceMappingURL=config.js.map
