@@ -1,0 +1,86 @@
+# Team Workflow Configuration Example
+# This example shows how to configure CheckWise for team-based development workflows
+
+name: Team Workflow Validation
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  validate-team-checklist:
+    runs-on: ubuntu-latest
+    name: Team Workflow Validation
+    # Only run on non-draft PRs
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Team Checklist
+        uses: inciarmors/checkwise@v1
+        with:
+          checklist-path: .github/TEAM_CHECKLIST.md
+          
+          # Role-based validation patterns
+          required-patterns: |
+            ## Developer Checklist
+            - [ ] Code follows team style guide
+            - [ ] Unit tests added/updated
+            - [ ] Documentation updated
+            - [ ] Self-review completed
+            
+            ## Code Review Checklist
+            - [ ] Code logic reviewed
+            - [ ] Security considerations checked
+            - [ ] Performance impact assessed
+            - [ ] Test coverage verified
+            
+            ## QA Checklist
+            - [ ] Manual testing completed
+            - [ ] Edge cases tested
+            - [ ] Regression testing performed
+            - [ ] User acceptance criteria met
+          
+          # Team size and role-based conditional requirements
+          conditional-patterns: |
+            # For senior developers
+            author.login in ['senior-dev-1', 'senior-dev-2']:
+              - [ ] Architecture review completed
+              - [ ] Junior developer mentored
+              - [ ] Code complexity analyzed
+            
+            # For critical files
+            src/core/**:
+              - [ ] Architecture team approval
+              - [ ] Performance benchmarks run
+              - [ ] Backward compatibility verified
+            
+            # For database changes
+            migrations/**:
+              - [ ] DBA review completed
+              - [ ] Rollback plan prepared
+              - [ ] Production impact assessed
+          
+          # Team workflow settings
+          require-assignee: true
+          require-reviewer: true
+          min-reviewers: 2
+          block-merge-without-approval: true
+          
+          # Team-specific validation
+          validate-commit-messages: true
+          enforce-branch-naming: true
+          check-jira-tickets: true
+          
+          # Custom team messages
+          custom-messages: |
+            missing-tests: "Team policy requires test coverage for all new features"
+            missing-docs: "Documentation updates are mandatory for API changes"
+            missing-security-review: "Security team review required for authentication changes"
+          
+          # Integration with team tools
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          jira-integration: true
+          confluence-docs: true

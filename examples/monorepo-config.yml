@@ -1,0 +1,82 @@
+# Monorepo Configuration Example
+# This example shows how to configure CheckWise for a monorepo with multiple packages
+
+name: CheckWise Monorepo Validation
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+jobs:
+  validate-checklist:
+    runs-on: ubuntu-latest
+    name: Validate Monorepo Checklist
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for better analysis
+
+      - name: Validate Checklist
+        uses: inciarmors/checkwise@v1
+        with:
+          # Multiple checklist locations for different packages
+          checklist-path: |
+            .github/CHECKLIST.md
+            packages/frontend/.github/CHECKLIST.md
+            packages/backend/.github/CHECKLIST.md
+            packages/shared/.github/CHECKLIST.md
+          
+          # Advanced patterns for monorepo structure
+          required-patterns: |
+            ## Backend Changes
+            - [ ] Database migrations tested
+            - [ ] API endpoints documented
+            - [ ] Unit tests updated
+            
+            ## Frontend Changes  
+            - [ ] UI components tested
+            - [ ] Accessibility verified
+            - [ ] Cross-browser compatibility checked
+            
+            ## Shared Library Changes
+            - [ ] Breaking changes documented
+            - [ ] Version bump strategy decided
+            - [ ] Dependent packages notified
+          
+          # Package-specific patterns
+          conditional-patterns: |
+            backend/**:
+              - [ ] Database schema validated
+              - [ ] Performance impact assessed
+              - [ ] Security review completed
+            
+            frontend/**:
+              - [ ] Bundle size impact measured
+              - [ ] Lighthouse score maintained
+              - [ ] Mobile responsiveness verified
+            
+            packages/shared/**:
+              - [ ] Semantic versioning applied
+              - [ ] Breaking changes listed
+              - [ ] Migration guide provided
+          
+          # Monorepo-specific settings
+          ignore-patterns: |
+            docs/**
+            scripts/**
+            .github/workflows/**
+          
+          # Enhanced validation for complex projects
+          strict-mode: true
+          require-all-checkboxes: false  # Allow partial completion
+          fail-on-missing-sections: true
+          validate-links: true
+          check-formatting: true
+          
+          # Custom error messages for monorepo context
+          custom-messages: |
+            missing-backend-tests: "Backend changes require comprehensive test coverage"
+            missing-frontend-a11y: "Frontend changes must include accessibility verification"
+            missing-migration-guide: "Shared library changes need migration documentation"
