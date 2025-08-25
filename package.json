@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "ncc build src/main.ts -o dist --no-source-map-register && node -e \"const fs=require('fs'),path=require('path'); fs.renameSync('dist/index.js','dist/main.js'); fs.readdirSync('dist').filter(f=>f.endsWith('.map')).forEach(f=>fs.unlinkSync(path.join('dist',f)))\"",
+    "build": "ncc build src/main.ts -o dist --no-source-map-register --minify && node -e \"const fs=require('fs'),path=require('path'); fs.renameSync('dist/index.js','dist/main.js'); const files=fs.readdirSync('dist'); files.filter(f=>f.endsWith('.map')||f.endsWith('.d.ts')||f.endsWith('.d.ts.map')).forEach(f=>{try{fs.unlinkSync(path.join('dist',f))}catch(e){}})\"",
     "dev": "tsc --watch",
     "lint": "tsc --noEmit",
     "clean": "rimraf dist coverage"

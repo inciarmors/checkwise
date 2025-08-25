@@ -19,7 +19,7 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 3. Set up the development environment
 
 ```bash
-git clone https://github.com/yourusername/checkwise
+git clone https://github.com/inciarmors/checkwise
 cd checkwise
 npm install
 ```
