@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4914:
@@ -38157,18 +38157,18 @@ function wrappy (fn, cb) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.generateChecklistMarkdown = generateChecklistMarkdown;
 /**
- * Genera una checklist markdown a partire dalle regole matchate.
- * @param rules Array di regole matchate
- * @returns Stringa markdown pronta da inserire in un commento PR
+ * Generates a markdown checklist from the matched rules.
+ * @param rules Array of matched rules
+ * @returns Markdown string ready to be inserted in a PR comment
  */
 function generateChecklistMarkdown(rules) {
     if (!rules.length) {
-        return '_Nessuna checklist richiesta per i file modificati in questa PR._';
+        return '_No checklist required for the files changed in this PR._';
     }
-    let md = '## Checklist automatica\n\n';
+    let md = '## Automated Checklist\n\n';
     rules.forEach((rule, idx) => {
         if (rules.length > 1) {
-            md += `**Regola #${idx + 1}:**\n`;
+            md += `**Rule #${idx + 1}:**\n`;
         }
         rule.require.forEach(item => {
             md += `- [ ] ${item}\n`;
@@ -38194,10 +38194,10 @@ exports.loadConfig = loadConfig;
 const fs_1 = __importDefault(__nccwpck_require__(9896));
 const js_yaml_1 = __importDefault(__nccwpck_require__(4281));
 /**
- * Carica e valida la configurazione YAML di Checkwise.
- * @param path Percorso del file YAML (default: .github/scope-mate.yml)
- * @returns Oggetto CheckwiseCfg tipizzato
- * @throws Errore se il file è mancante, malformato o non valido
+ * Loads and validates the Checkwise YAML configuration.
+ * @param path Path to the YAML file (default: .github/scope-mate.yml)
+ * @returns Typed CheckwiseCfg object
+ * @throws Error if the file is missing, malformed, or invalid
  */
 function loadConfig(path = '.github/scope-mate.yml') {
     let raw;
@@ -38207,93 +38207,93 @@ function loadConfig(path = '.github/scope-mate.yml') {
     }
     catch (e) {
         if (e.code === 'ENOENT') {
-            throw new Error(`File di configurazione non trovato: "${path}". ` +
-                `Crea il file con le tue regole checklist o specifica un path diverso con config-path.`);
+            throw new Error(`Configuration file not found: "${path}". ` +
+                `Create the file with your checklist rules or specify a different path with config-path.`);
         }
         if (e.name === 'YAMLException') {
-            throw new Error(`Errore di parsing YAML in "${path}": ${e.message}. ` +
-                `Controlla la sintassi YAML del file di configurazione.`);
+            throw new Error(`YAML parsing error in "${path}": ${e.message}. ` +
+                `Check the YAML syntax of the configuration file.`);
         }
-        throw new Error(`Impossibile leggere config YAML "${path}": ${e.message}`);
+        throw new Error(`Unable to read config YAML "${path}": ${e.message}`);
     }
-    // Validazione base
+    // Basic validation
     if (!raw || typeof raw !== 'object') {
-        throw new Error(`Config YAML vuoto o non valido in "${path}". Il file deve contenere un oggetto YAML.`);
+        throw new Error(`Empty or invalid YAML config in "${path}". The file must contain a YAML object.`);
     }
     if (!raw.checklists) {
-        throw new Error(`Config YAML in "${path}": proprietà "checklists" mancante. Esempio:\nchecklists:\n  - when: ["src/**/*.ts"]\n    require: ["Test passati"]`);
+        throw new Error(`Config YAML in "${path}": missing "checklists" property. Example:\nchecklists:\n  - when: ["src/**/*.ts"]\n    require: ["Tests passed"]`);
     }
     if (!Array.isArray(raw.checklists)) {
-        throw new Error(`Config YAML in "${path}": "checklists" deve essere un array. Trovato: ${typeof raw.checklists}`);
+        throw new Error(`Config YAML in "${path}": "checklists" must be an array. Found: ${typeof raw.checklists}`);
     }
     if (raw.checklists.length === 0) {
-        throw new Error(`Config YAML in "${path}": array "checklists" è vuoto. Aggiungi almeno una regola.`);
+        throw new Error(`The "checklists" array is empty. Add at least one rule.`);
     }
-    // Validazione granulare delle regole
+    // Granular validation of rules
     for (const [i, rule] of raw.checklists.entries()) {
-        const ruleContext = `Regola checklist #${i + 1} in "${path}"`;
+        const ruleContext = `Checklist rule #${i + 1} in "${path}"`;
         if (!rule || typeof rule !== 'object') {
-            throw new Error(`${ruleContext}: deve essere un oggetto. Trovato: ${typeof rule}`);
+            throw new Error(`${ruleContext}: must be an object. Found: ${typeof rule}`);
         }
         if (!rule.when) {
-            throw new Error(`${ruleContext}: proprietà "when" mancante. Specifica i pattern glob dei file da matchare.`);
+            throw new Error(`${ruleContext}: missing "when" property. Specify the glob patterns of the files to match.`);
         }
         if (!Array.isArray(rule.when)) {
-            throw new Error(`${ruleContext}: "when" deve essere un array di pattern glob. Trovato: ${typeof rule.when}`);
+            throw new Error(`${ruleContext}: "when" must be an array of glob patterns. Found: ${typeof rule.when}`);
         }
         if (rule.when.length === 0) {
-            throw new Error(`${ruleContext}: array "when" è vuoto. Specifica almeno un pattern glob.`);
+            throw new Error(`${ruleContext}: "when" array is empty. Specify at least one glob pattern.`);
         }
         for (const [j, pattern] of rule.when.entries()) {
             if (typeof pattern !== 'string') {
-                throw new Error(`${ruleContext}: pattern #${j + 1} in "when" deve essere una stringa. Trovato: ${typeof pattern}`);
+                throw new Error(`${ruleContext}: pattern #${j + 1} in "when" must be a string. Found: ${typeof pattern}`);
             }
             if (pattern.trim().length === 0) {
-                throw new Error(`${ruleContext}: pattern #${j + 1} in "when" è vuoto.`);
+                throw new Error(`${ruleContext}: pattern #${j + 1} in "when" is empty.`);
             }
         }
         if (!rule.require) {
-            throw new Error(`${ruleContext}: proprietà "require" mancante. Specifica gli item della checklist.`);
+            throw new Error(`${ruleContext}: missing "require" property. Specify the checklist items.`);
         }
         if (!Array.isArray(rule.require)) {
-            throw new Error(`${ruleContext}: "require" deve essere un array di stringhe. Trovato: ${typeof rule.require}`);
+            throw new Error(`${ruleContext}: "require" must be an array of strings. Found: ${typeof rule.require}`);
         }
         if (rule.require.length === 0) {
-            throw new Error(`${ruleContext}: array "require" è vuoto. Specifica almeno un item della checklist.`);
+            throw new Error(`${ruleContext}: "require" array is empty. Specify at least one checklist item.`);
         }
         for (const [j, item] of rule.require.entries()) {
             if (typeof item !== 'string') {
-                throw new Error(`${ruleContext}: item #${j + 1} in "require" deve essere una stringa. Trovato: ${typeof item}`);
+                throw new Error(`${ruleContext}: item #${j + 1} in "require" must be a string. Found: ${typeof item}`);
             }
             if (item.trim().length === 0) {
-                throw new Error(`${ruleContext}: item #${j + 1} in "require" è vuoto.`);
+                throw new Error(`${ruleContext}: item #${j + 1} in "require" is empty.`);
             }
         }
-        // Validazione opzioni opzionali
+        // Optional options validation
         if (rule.optional !== undefined && typeof rule.optional !== 'boolean') {
-            throw new Error(`${ruleContext}: "optional" deve essere true/false. Trovato: ${typeof rule.optional}`);
+            throw new Error(`${ruleContext}: "optional" must be true/false. Found: ${typeof rule.optional}`);
         }
     }
-    // Validazione opzioni globali se presenti
+    // Global options validation if present
     if (raw.options) {
         if (typeof raw.options !== 'object') {
-            throw new Error(`Config YAML in "${path}": "options" deve essere un oggetto. Trovato: ${typeof raw.options}`);
+            throw new Error(`Config YAML in "${path}": "options" must be an object. Found: ${typeof raw.options}`);
         }
         if (raw.options.label_filter !== undefined) {
             if (!Array.isArray(raw.options.label_filter)) {
-                throw new Error(`Config YAML in "${path}": options.label_filter deve essere un array. Trovato: ${typeof raw.options.label_filter}`);
+                throw new Error(`Config YAML in "${path}": options.label_filter must be an array. Found: ${typeof raw.options.label_filter}`);
             }
             for (const [i, label] of raw.options.label_filter.entries()) {
                 if (typeof label !== 'string') {
-                    throw new Error(`Config YAML in "${path}": options.label_filter[${i}] deve essere una stringa. Trovato: ${typeof label}`);
+                    throw new Error(`Config YAML in "${path}": options.label_filter[${i}] must be a string. Found: ${typeof label}`);
                 }
             }
         }
         if (raw.options.branch_pattern !== undefined && typeof raw.options.branch_pattern !== 'string') {
-            throw new Error(`Config YAML in "${path}": options.branch_pattern deve essere una stringa. Trovato: ${typeof raw.options.branch_pattern}`);
+            throw new Error(`Config YAML in "${path}": options.branch_pattern must be a string. Found: ${typeof raw.options.branch_pattern}`);
         }
         if (raw.options.comment_header !== undefined && typeof raw.options.comment_header !== 'string') {
-            throw new Error(`Config YAML in "${path}": options.comment_header deve essere una stringa. Trovato: ${typeof raw.options.comment_header}`);
+            throw new Error(`Config YAML in "${path}": options.comment_header must be a string. Found: ${typeof raw.options.comment_header}`);
         }
     }
     return raw;
@@ -38341,12 +38341,13 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.safeApiCall = safeApiCall;
 exports.getChangedFiles = getChangedFiles;
 exports.findCheckwiseComment = findCheckwiseComment;
 exports.createComment = createComment;
 exports.updateComment = updateComment;
 const github = __importStar(__nccwpck_require__(3228));
-// Helper per gestire rate limiting e network failures
+// Helper to handle rate limiting and network failures
 async function safeApiCall(fn, retries = 2) {
     let lastErr;
     for (let attempt = 0; attempt <= retries; attempt++) {
@@ -38367,7 +38368,7 @@ async function safeApiCall(fn, retries = 2) {
                 }
                 throw new Error('Network error while contacting GitHub API. Please retry.');
             }
-            // Altri errori: rilancia
+            // Other errors: rethrow
             throw err;
         }
     }
@@ -38395,7 +38396,7 @@ async function getChangedFiles(token, prNumber) {
     return files;
 }
 /**
- * Trova un commento esistente di Checkwise nella PR (usando un marker unico).
+ * Finds an existing Checkwise comment in the PR (using a unique marker).
  */
 async function findCheckwiseComment(token, prNumber, marker) {
     const octokit = github.getOctokit(token);
@@ -38414,7 +38415,7 @@ async function findCheckwiseComment(token, prNumber, marker) {
     return null;
 }
 /**
- * Crea un nuovo commento nella PR.
+ * Creates a new comment in the PR.
  */
 async function createComment(token, prNumber, body) {
     const octokit = github.getOctokit(token);
@@ -38427,7 +38428,7 @@ async function createComment(token, prNumber, body) {
     }));
 }
 /**
- * Aggiorna un commento esistente nella PR.
+ * Updates an existing comment in the PR.
  */
 async function updateComment(token, commentId, body) {
     const octokit = github.getOctokit(token);
@@ -38483,6 +38484,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = run;
+exports.runAction = runAction;
 exports.validateInputs = validateInputs;
 const core = __importStar(__nccwpck_require__(7484));
 const github = __importStar(__nccwpck_require__(3228));
@@ -38491,97 +38493,110 @@ const github_1 = __nccwpck_require__(9248);
 const matcher_1 = __nccwpck_require__(6033);
 const checklist_1 = __nccwpck_require__(2983);
 /**
- * Valida e normalizza gli input dell'action.
- * @returns Oggetto con input validati
- * @throws Error se gli input non sono validi
+ * Validates and normalizes the action inputs.
+ * @returns Object with validated inputs
+ * @throws Error if inputs are invalid
  */
 function validateInputs() {
-    // 1. Validazione GitHub token
+    // 1. Validate GitHub token
     const token = core.getInput('github-token', { required: true });
     if (!token || token.trim().length === 0) {
-        throw new Error('Input "github-token" è richiesto e non può essere vuoto');
+        throw new Error('Input "github-token" is required and cannot be empty');
     }
     if (!token.startsWith('ghp_') && !token.startsWith('ghs_') && !token.startsWith('github_pat_')) {
-        core.warning('GitHub token format inaspettato. Assicurati di usare un token valido.');
+        core.warning('Unexpected GitHub token format. Make sure you are using a valid token.');
     }
-    // 2. Validazione config path
+    // 2. Validate config path
     let configPath = core.getInput('config-path');
     if (!configPath || configPath.trim().length === 0) {
-        configPath = '.github/scope-mate.yml';
-        core.info(`Nessun config-path specificato, usando default: ${configPath}`);
+        configPath = '.github/checkwise.yml';
+        core.info(`No config-path specified, using default: ${configPath}`);
     }
     else {
         configPath = configPath.trim();
     }
-    // Validazione formato path
+    // Validate path format
     if (configPath.includes('..') || configPath.startsWith('/')) {
-        throw new Error(`Config path non sicuro: "${configPath}". Usa path relativi senza ".." o path assoluti.`);
+        throw new Error(`Unsafe config path: "${configPath}". Use relative paths without ".." or absolute paths.`);
     }
     if (!configPath.endsWith('.yml') && !configPath.endsWith('.yaml')) {
-        core.warning(`Config path "${configPath}" non termina con .yml/.yaml. Assicurati che sia un file YAML.`);
+        core.warning(`Config path "${configPath}" does not end with .yml/.yaml. Make sure it is a YAML file.`);
     }
-    // 3. Marker fisso per ora, ma validabile in futuro
+    // 3. Marker is fixed for now, but can be validated in the future
     const marker = '<!-- checkwise-marker -->';
     return { token, configPath, marker };
 }
+// Pure testable function
+async function runAction({ core, github, loadConfig, getChangedFiles, findCheckwiseComment, createComment, updateComment, getMatchingRules, generateChecklistMarkdown, validateInputs }) {
+    // 1. Validate action input
+    const { token, configPath, marker } = validateInputs();
+    // 2. Validate GitHub PR context BEFORE loading config
+    if (!github.context.repo) {
+        throw new Error('GitHub context not available. Make sure the action is running in a GitHub repository.');
+    }
+    const { owner, repo } = github.context.repo;
+    if (!owner || !repo) {
+        throw new Error(`Repository context is incomplete: owner="${owner}", repo="${repo}"`);
+    }
+    const prNumber = github.context.payload.pull_request?.number;
+    if (!prNumber) {
+        const eventName = github.context.eventName;
+        throw new Error(`Unable to determine the Pull Request number. ` +
+            `Event: "${eventName}". Make sure the action is triggered on pull_request events ` +
+            `(opened, synchronize, edited, etc.). Payload available: ${Object.keys(github.context.payload).join(', ')}`);
+    }
+    if (typeof prNumber !== 'number' || prNumber <= 0) {
+        throw new Error(`Invalid PR number: ${prNumber}. It must be a positive number.`);
+    }
+    // 3. Load config ONLY after validating context
+    const config = loadConfig(configPath);
+    core.info(`Inputs validated: repo=${owner}/${repo}, PR=#${prNumber}, config=${configPath}`);
+    // 4. Get changed files
+    const changedFiles = await getChangedFiles(token, prNumber);
+    if (changedFiles.length === 0) {
+        core.info('No changed files found in the PR. No checklist generated.');
+        return;
+    }
+    core.info(`Changed files detected: ${changedFiles.length}`);
+    core.debug(`Files: ${changedFiles.join(', ')}`);
+    // 5. Match rules
+    const rules = getMatchingRules(changedFiles, config.checklists);
+    if (rules.length === 0) {
+        core.info('No rules matched for the changed files. No checklist required.');
+        return;
+    }
+    core.info(`Matched rules: ${rules.length}`);
+    // 6. Generate checklist markdown (add hidden marker)
+    const checklist = `${marker}\n${generateChecklistMarkdown(rules)}`;
+    // 7. Manage PR comment (idempotent)
+    const existing = await findCheckwiseComment(token, prNumber, marker);
+    if (existing) {
+        await updateComment(token, existing.id, checklist);
+        core.info('Checklist updated in the existing comment.');
+    }
+    else {
+        await createComment(token, prNumber, checklist);
+        core.info('Checklist created as a new comment.');
+    }
+}
+// Real entry point, calls the pure function with real dependencies
 async function run() {
     try {
-        // 1. Valida input dell'action
-        const { token, configPath, marker } = validateInputs();
-        // 2. Carica config
-        const config = (0, config_1.loadConfig)(configPath);
-        // 3. Validazione contesto GitHub
-        if (!github.context.repo) {
-            throw new Error('Contesto GitHub non disponibile. Assicurati che l\'action sia eseguita in un repository GitHub.');
-        }
-        const { owner, repo } = github.context.repo;
-        if (!owner || !repo) {
-            throw new Error(`Repository context incompleto: owner="${owner}", repo="${repo}"`);
-        }
-        // 4. Recupera numero PR dal contesto con validazione estesa
-        const prNumber = github.context.payload.pull_request?.number;
-        if (!prNumber) {
-            const eventName = github.context.eventName;
-            throw new Error(`Impossibile determinare il numero della Pull Request. ` +
-                `Event: "${eventName}". Assicurati che l'action sia triggered su eventi di pull_request ` +
-                `(opened, synchronize, edited, etc.). Payload disponibile: ${Object.keys(github.context.payload).join(', ')}`);
-        }
-        if (typeof prNumber !== 'number' || prNumber <= 0) {
-            throw new Error(`Numero PR non valido: ${prNumber}. Deve essere un numero positivo.`);
-        }
-        core.info(`✅ Input validati: repo=${owner}/${repo}, PR=#${prNumber}, config=${configPath}`);
-        // 5. Ottieni file modificati
-        const changedFiles = await (0, github_1.getChangedFiles)(token, prNumber);
-        if (changedFiles.length === 0) {
-            core.info('⚠️ Nessun file modificato trovato nella PR. Nessuna checklist generata.');
-            return;
-        }
-        core.info(`📁 File modificati rilevati: ${changedFiles.length}`);
-        core.debug(`File: ${changedFiles.join(', ')}`);
-        // 6. Matcha regole
-        const rules = (0, matcher_1.getMatchingRules)(changedFiles, config.checklists);
-        if (rules.length === 0) {
-            core.info('🎯 Nessuna regola matchata per i file modificati. Nessuna checklist richiesta.');
-            return;
-        }
-        core.info(`📋 Regole matchate: ${rules.length}`);
-        // 7. Genera checklist markdown (aggiungi marker nascosto)
-        const checklist = `${marker}\n${(0, checklist_1.generateChecklistMarkdown)(rules)}`;
-        // 8. Gestisci commento PR (idempotente)
-        const existing = await (0, github_1.findCheckwiseComment)(token, prNumber, marker);
-        if (existing) {
-            await (0, github_1.updateComment)(token, existing.id, checklist);
-            core.info('✅ Checklist aggiornata nel commento esistente.');
-        }
-        else {
-            await (0, github_1.createComment)(token, prNumber, checklist);
-            core.info('✅ Checklist creata come nuovo commento.');
-        }
+        await runAction({
+            core,
+            github,
+            loadConfig: config_1.loadConfig,
+            getChangedFiles: github_1.getChangedFiles,
+            findCheckwiseComment: github_1.findCheckwiseComment,
+            createComment: github_1.createComment,
+            updateComment: github_1.updateComment,
+            getMatchingRules: matcher_1.getMatchingRules,
+            generateChecklistMarkdown: checklist_1.generateChecklistMarkdown,
+            validateInputs
+        });
     }
     catch (err) {
-        // Enhanced error handling con context specifico
-        const errorMessage = err.message || 'Errore sconosciuto';
-        // Aggiungi context utile per debugging
+        const errorMessage = err && err.message ? err.message : 'Unknown error';
         const context = {
             eventName: github.context.eventName,
             repoOwner: github.context.repo?.owner,
@@ -38589,22 +38604,24 @@ async function run() {
             prNumber: github.context.payload.pull_request?.number,
             hasToken: !!core.getInput('github-token', { required: false })
         };
-        core.error(`❌ Checkwise failed: ${errorMessage}`);
+        core.error(`Checkwise failed: ${errorMessage}`);
         core.debug(`Context: ${JSON.stringify(context, null, 2)}`);
-        // Log di debugging per errori comuni
         if (errorMessage.includes('Pull Request')) {
-            core.error('💡 Suggerimento: Assicurati che il workflow sia triggered su eventi pull_request');
+            core.error('Tip: Make sure the workflow is triggered on pull_request events');
         }
         if (errorMessage.includes('token')) {
-            core.error('💡 Suggerimento: Verifica che github-token sia configurato correttamente');
+            core.error('Tip: Check that github-token is configured correctly');
         }
         if (errorMessage.includes('config')) {
-            core.error('💡 Suggerimento: Controlla che il file di configurazione esista e sia valido');
+            core.error('Tip: Make sure the configuration file exists and is valid');
         }
         core.setFailed(errorMessage);
     }
 }
-// Esegui solo se chiamato come script principale
+/* istanbul ignore next */
+if (require.main === require.cache[eval('__filename')]) {
+    run();
+}
 /* istanbul ignore next */
 if (require.main === require.cache[eval('__filename')]) {
     run();
@@ -38625,14 +38642,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getMatchingRules = getMatchingRules;
 const micromatch_1 = __importDefault(__nccwpck_require__(8785));
 /**
- * Restituisce le regole che matchano almeno un file modificato.
- * @param changedFilePaths Lista dei file modificati nella PR
- * @param rules Array di regole checklist dalla config
- * @returns Solo le regole che matchano almeno un file
+ * Returns the rules that match at least one changed file.
+ * @param changedFilePaths List of files changed in the PR
+ * @param rules Array of checklist rules from the config
+ * @returns Only the rules that match at least one file
  */
 function getMatchingRules(changedFilePaths, rules) {
     return rules.filter(rule => {
-        // Se almeno un file matcha uno dei glob pattern della regola, la regola è attiva
+        // If at least one file matches one of the rule's glob patterns, the rule is active
         return (0, micromatch_1.default)(changedFilePaths, rule.when).length > 0;
     });
 }
@@ -40560,3 +40577,4 @@ module.exports = parseParams
 /******/ 	
 /******/ })()
 ;
+//# sourceMappingURL=index.js.map

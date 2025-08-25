@@ -1,19 +1,19 @@
 import { ChecklistRule } from './config';
 
 /**
- * Genera una checklist markdown a partire dalle regole matchate.
- * @param rules Array di regole matchate
- * @returns Stringa markdown pronta da inserire in un commento PR
+ * Generates a markdown checklist from the matched rules.
+ * @param rules Array of matched rules
+ * @returns Markdown string ready to be inserted in a PR comment
  */
 export function generateChecklistMarkdown(rules: ChecklistRule[]): string {
   if (!rules.length) {
-    return '_Nessuna checklist richiesta per i file modificati in questa PR._';
+    return '_No checklist required for the files changed in this PR._';
   }
 
-  let md = '## Checklist automatica\n\n';
+  let md = '## Automated Checklist\n\n';
   rules.forEach((rule, idx) => {
     if (rules.length > 1) {
-      md += `**Regola #${idx + 1}:**\n`;
+      md += `**Rule #${idx + 1}:**\n`;
     }
     rule.require.forEach(item => {
       md += `- [ ] ${item}\n`;

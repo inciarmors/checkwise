@@ -5,7 +5,7 @@
 [![GitHub Action](https://img.shields.io/badge/GitHub-Action-blue?logo=github-actions)](https://github.com/marketplace/actions/checkwise)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tests](https://img.shields.io/badge/Tests-78%20passed-green)](https://github.com/inciarmors/CheckWise/actions)
-[![Coverage](https://img.shields.io/badge/Coverage-99.4%25-brightgreen)](https://github.com/inciarmors/CheckWise/actions)
+[![Coverage](https://img.shields.io/badge/Coverage-98.8%25-brightgreen)](https://github.com/inciarmors/CheckWise/actions)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ---
@@ -297,7 +297,7 @@ npm run build        # Production build with ncc bundling
 ```
 checkwise/
 ├── src/                    # TypeScript source code
-├── __tests__/             # Jest test suite (99.4% coverage)
+├── __tests__/             # Jest test suite (98.8% coverage)
 ├── dist/                  # Compiled JavaScript (committed for GitHub Actions)
 ├── examples/              # Configuration examples
 ├── docs/                  # Additional documentation
@@ -308,13 +308,13 @@ checkwise/
 
 ### Testing
 
-The project maintains **99.4% test coverage** with comprehensive validation:
+The project maintains **98.8% test coverage** with comprehensive validation:
 
 ```bash
 # Test statistics
 Test Suites: 7 passed, 7 total
 Tests:       78 passed, 78 total
-Coverage:    99.4% statements, 99.2% branches, 100% functions
+Coverage:    98.8% statements, 93% branches, 79% functions
 ```
 
 Key test areas:

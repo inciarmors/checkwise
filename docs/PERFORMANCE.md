@@ -27,7 +27,7 @@ CheckWise is designed for high-performance validation of pull request checklists
 ### 1. Checklist Structure Optimization
 
 ```yaml
-# ✅ GOOD: Well-structured, scannable patterns
+# GOOD: Well-structured, scannable patterns
 required-patterns: |
   ## Core Requirements
   - [ ] Tests added
@@ -36,7 +36,7 @@ required-patterns: |
   ## Security
   - [ ] Security review completed
 
-# ❌ AVOID: Overly complex regex patterns
+# AVOID: Overly complex regex patterns
 required-patterns: |
   - [ ] Tests? (added|updated|modified|created)?.*
 ```
@@ -44,14 +44,14 @@ required-patterns: |
 ### 2. Pattern Matching Optimization
 
 ```yaml
-# ✅ GOOD: Specific, efficient patterns
+# GOOD: Specific, efficient patterns
 conditional-patterns: |
   src/api/**:
     - [ ] API documentation updated
   src/ui/**:
     - [ ] UI tests added
 
-# ❌ AVOID: Broad, inefficient patterns  
+# AVOID: Broad, inefficient patterns  
 conditional-patterns: |
   "**/*.(js|ts|jsx|tsx|vue|svelte)":
     - [ ] Complex validation pattern
@@ -60,11 +60,11 @@ conditional-patterns: |
 ### 3. GitHub API Optimization
 
 ```yaml
-# ✅ GOOD: Minimal API usage
+# GOOD: Minimal API usage
 checklist-path: .github/CHECKLIST.md
 validate-links: false  # Disable if not needed
 
-# ❌ AVOID: Excessive API calls
+# AVOID: Excessive API calls
 checklist-path: |
   .github/CHECKLIST.md
   docs/CHECKLIST.md

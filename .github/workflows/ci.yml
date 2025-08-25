@@ -134,9 +134,9 @@ jobs:
             const fs = require('fs');
             try {
               yaml.load(fs.readFileSync('$file', 'utf8'));
-              console.log('✅ $file is valid YAML');
+              console.log('$file is valid YAML');
             } catch (e) {
-              console.error('❌ $file is invalid:', e.message);
+              console.error('$file is invalid:', e.message);
               process.exit(1);
             }
           "
@@ -167,28 +167,28 @@ jobs:
     - name: Verify build artifacts
       run: |
         # Check that required files exist
-        [ -f "dist/main.js" ] || { echo "❌ dist/main.js missing"; exit 1; }
-        [ -f "action.yml" ] || { echo "❌ action.yml missing"; exit 1; }
-        [ -f "package.json" ] || { echo "❌ package.json missing"; exit 1; }
-        [ -f "README.MD" ] || { echo "❌ README.MD missing"; exit 1; }
-        
+        [ -f "dist/main.js" ] || { echo "dist/main.js missing"; exit 1; }
+        [ -f "action.yml" ] || { echo "action.yml missing"; exit 1; }
+        [ -f "package.json" ] || { echo "package.json missing"; exit 1; }
+        [ -f "README.MD" ] || { echo "README.MD missing"; exit 1; }
+
         # Check that build is not broken
-        node -e "require('./dist/main.js')" || { echo "❌ Built action is not loadable"; exit 1; }
-        
-        echo "✅ All build artifacts verified"
-    
+        node -e "require('./dist/main.js')" || { echo "Built action is not loadable"; exit 1; }
+
+        echo "All build artifacts verified"
+
     - name: Check for sensitive files
       run: |
         # Ensure no sensitive files are committed
         if find . -name "*.env*" -o -name "*.key" -o -name "*.pem" -o -name "*.p12" | grep -v node_modules | grep -v ".env.example"; then
-          echo "❌ Sensitive files found in repository"
+          echo "Sensitive files found in repository"
           exit 1
         fi
-        
+
         # Check for source maps in dist (should be excluded)
         if find dist/ -name "*.map" 2>/dev/null | head -1; then
-          echo "❌ Source map files found in dist/ (security risk)"
+          echo "Source map files found in dist/ (security risk)"
           exit 1
         fi
-        
-        echo "✅ No sensitive files found"
+
+        echo "No sensitive files found"

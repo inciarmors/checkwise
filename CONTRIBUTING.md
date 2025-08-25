@@ -147,7 +147,7 @@ Fixes #67
 
 ## Types of Contributions
 
-### 🐛 Bug Reports
+### Bug Reports
 Use the bug report template and include:
 - Clear description of the issue
 - Steps to reproduce
@@ -155,21 +155,21 @@ Use the bug report template and include:
 - Relevant log output
 - Expected vs actual behavior
 
-### ✨ Feature Requests
+### Feature Requests
 Use the feature request template and include:
 - Clear description of the problem you're solving
 - Proposed solution with examples
 - Alternative solutions considered
 - Use cases and benefits
 
-### 📚 Documentation
+### Documentation
 Documentation improvements are always welcome:
 - Fix typos or improve clarity
 - Add examples for complex configurations
 - Improve API documentation
 - Add troubleshooting guides
 
-### 🧪 Testing
+### Testing
 Help improve test coverage:
 - Add tests for edge cases
 - Improve integration tests
@@ -260,4 +260,4 @@ Feel free to open a discussion or issue for any questions about contributing. We
 
 ---
 
-Thank you for contributing to Checkwise! 🚀
+Thank you for contributing to Checkwise!

@@ -2,11 +2,11 @@ import { generateChecklistMarkdown } from '../src/checklist';
 import { ChecklistRule } from '../src/config';
 
 describe('generateChecklistMarkdown', () => {
-  it('genera una checklist vuota se nessuna regola matchata', () => {
-    expect(generateChecklistMarkdown([])).toMatch(/Nessuna checklist/);
+  it('generates an empty checklist if no rule matched', () => {
+    expect(generateChecklistMarkdown([])).toMatch(/No checklist/);
   });
 
-  it('genera una checklist per una sola regola', () => {
+  it('generates a checklist for a single rule', () => {
     const rules: ChecklistRule[] = [
       {
         when: ['src/**/*.ts'],
@@ -16,10 +16,10 @@ describe('generateChecklistMarkdown', () => {
     const md = generateChecklistMarkdown(rules);
     expect(md).toContain('- [ ] Test coverage > 90%');
     expect(md).toContain('- [ ] Lint passed');
-    expect(md).not.toContain('Regola #');
+    expect(md).not.toContain('Rule #');
   });
 
-  it('genera una checklist per più regole', () => {
+  it('generates a checklist for multiple rules', () => {
     const rules: ChecklistRule[] = [
       {
         when: ['src/**/*.ts'],
@@ -27,13 +27,13 @@ describe('generateChecklistMarkdown', () => {
       },
       {
         when: ['infra/**'],
-        require: ['Esegui terraform plan']
+        require: ['Run terraform plan']
       }
     ];
     const md = generateChecklistMarkdown(rules);
-    expect(md).toContain('**Regola #1:**');
-    expect(md).toContain('**Regola #2:**');
+    expect(md).toContain('**Rule #1:**');
+    expect(md).toContain('**Rule #2:**');
     expect(md).toContain('- [ ] Test coverage > 90%');
-    expect(md).toContain('- [ ] Esegui terraform plan');
+    expect(md).toContain('- [ ] Run terraform plan');
   });
 });

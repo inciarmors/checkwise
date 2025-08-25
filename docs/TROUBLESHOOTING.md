@@ -13,11 +13,11 @@ This guide helps you diagnose and resolve common issues when using CheckWise in 
 **Possible Causes & Solutions**:
 
 ```yaml
-# ❌ PROBLEM: Missing trigger events
+# PROBLEM: Missing trigger events
 on:
   pull_request:
 
-# ✅ SOLUTION: Add specific trigger events
+# SOLUTION: Add specific trigger events
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -25,11 +25,11 @@ on:
 ```
 
 ```yaml
-# ❌ PROBLEM: Wrong file permissions
+# PROBLEM: Wrong file permissions
 - name: Checkout
   uses: actions/checkout@v4
 
-# ✅ SOLUTION: Ensure proper permissions
+# SOLUTION: Ensure proper permissions
 - name: Checkout
   uses: actions/checkout@v4
   with:
@@ -56,14 +56,14 @@ on:
 **Solutions**:
 
 ```yaml
-# ✅ Verify file exists and path is correct
+# Verify file exists and path is correct
 - name: Debug Checklist Path
   run: |
     ls -la .github/
     find . -name "*CHECKLIST*" -type f
     file .github/CHECKLIST.md
 
-# ✅ Handle multiple possible locations
+# Handle multiple possible locations
 - name: Validate Checklist
   uses: inciarmors/checkwise@v1
   with:
@@ -80,23 +80,23 @@ on:
 **Common Issues**:
 
 ```markdown
-<!-- ❌ PROBLEM: Inconsistent formatting -->
+<!-- PROBLEM: Inconsistent formatting -->
 - [ ]Tests added
 - [ ] Documentation updated
 - [x]Security review completed
 
-<!-- ✅ SOLUTION: Consistent spacing -->
+<!-- SOLUTION: Consistent spacing -->
 - [ ] Tests added
 - [ ] Documentation updated  
 - [x] Security review completed
 ```
 
 ```yaml
-# ❌ PROBLEM: Overly specific patterns
+# PROBLEM: Overly specific patterns
 required-patterns: |
   - [x] All unit tests pass with 100% coverage
 
-# ✅ SOLUTION: Flexible patterns
+# SOLUTION: Flexible patterns
 required-patterns: |
   - [ ] Unit tests added/updated
   - [ ] Test coverage maintained
@@ -121,13 +121,13 @@ required-patterns: |
 **Solutions**:
 
 ```yaml
-# ✅ Use GitHub App token for higher limits
+# Use GitHub App token for higher limits
 - name: Validate Checklist
   uses: inciarmors/checkwise@v1
   with:
     github-token: ${{ secrets.GITHUB_APP_TOKEN }}
     
-# ✅ Disable API-heavy features if not needed
+# Disable API-heavy features if not needed
 - name: Validate Checklist
   uses: inciarmors/checkwise@v1
   with:
@@ -147,7 +147,7 @@ required-patterns: |
 **Performance Optimization**:
 
 ```yaml
-# ✅ Add timeouts and optimize configuration
+# Add timeouts and optimize configuration
 jobs:
   validate-checklist:
     runs-on: ubuntu-latest
@@ -172,13 +172,13 @@ See [Performance Documentation](PERFORMANCE.md) for detailed optimization strate
 **Common Solutions**:
 
 ```yaml
-# ✅ Ensure proper workflow permissions
+# Ensure proper workflow permissions
 permissions:
   contents: read
   pull-requests: read
   checks: write
 
-# ✅ For private repositories
+# For private repositories
 - name: Checkout
   uses: actions/checkout@v4
   with:
@@ -192,7 +192,7 @@ permissions:
 **Solutions**:
 
 ```yaml
-# ✅ Ensure UTF-8 encoding
+# Ensure UTF-8 encoding
 - name: Validate Checklist
   uses: inciarmors/checkwise@v1
   with:
@@ -201,11 +201,11 @@ permissions:
 ```
 
 ```markdown
-<!-- ✅ Use standard checkbox formatting -->
+<!-- Use standard checkbox formatting -->
 - [ ] Standard checkbox
 - [x] Completed checkbox
 
-<!-- ❌ Avoid special unicode checkboxes -->
+<!-- Avoid special unicode checkboxes -->
 - ☐ Unicode empty checkbox
 - ☑ Unicode checked checkbox
 ```

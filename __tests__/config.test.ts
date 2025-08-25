@@ -17,7 +17,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockImplementation(() => { throw error; });
 
       expect(() => loadConfig('missing.yml')).toThrow(
-        'File di configurazione non trovato: "missing.yml". Crea il file con le tue regole checklist o specifica un path diverso con config-path.'
+        'Configuration file not found: "missing.yml". Create the file with your checklist rules or specify a different path with config-path.'
       );
     });
 
@@ -31,9 +31,9 @@ describe('Config Loading and Validation', () => {
         errorMessage = error.message;
       }
       
-      expect(errorMessage).toContain('Errore di parsing YAML in');
-      expect(errorMessage).toContain('invalid.yml');
-      expect(errorMessage).toContain('Controlla la sintassi YAML del file di configurazione');
+  expect(errorMessage).toContain('YAML parsing error in');
+  expect(errorMessage).toContain('invalid.yml');
+  expect(errorMessage).toContain('Check the YAML syntax of the configuration file');
     });
 
     it('should handle generic file read errors', () => {
@@ -41,7 +41,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockImplementation(() => { throw error; });
 
       expect(() => loadConfig('forbidden.yml')).toThrow(
-        'Impossibile leggere config YAML "forbidden.yml": Permission denied'
+        'Unable to read config YAML "forbidden.yml": Permission denied'
       );
     });
   });
@@ -51,7 +51,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockReturnValue('');
       
       expect(() => loadConfig('empty.yml')).toThrow(
-        'Config YAML vuoto o non valido in "empty.yml". Il file deve contenere un oggetto YAML.'
+        'Empty or invalid YAML config in "empty.yml". The file must contain a YAML object.'
       );
     });
 
@@ -59,7 +59,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockReturnValue('just a string');
       
       expect(() => loadConfig('string.yml')).toThrow(
-        'Config YAML vuoto o non valido in "string.yml". Il file deve contenere un oggetto YAML.'
+        'Empty or invalid YAML config in "string.yml". The file must contain a YAML object.'
       );
     });
 
@@ -67,7 +67,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockReturnValue('{}');
       
       expect(() => loadConfig('no-checklists.yml')).toThrow(
-        /proprietà "checklists" mancante.*Esempio:/
+        /missing "checklists" property.*Example:/
       );
     });
 
@@ -75,7 +75,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockReturnValue('checklists: "not an array"');
       
       expect(() => loadConfig('bad-checklists.yml')).toThrow(
-        '"checklists" deve essere un array. Trovato: string'
+        '"checklists" must be an array. Found: string'
       );
     });
 
@@ -83,7 +83,7 @@ describe('Config Loading and Validation', () => {
       mockReadFileSync.mockReturnValue('checklists: []');
       
       expect(() => loadConfig('empty-checklists.yml')).toThrow(
-        'array "checklists" è vuoto. Aggiungi almeno una regola.'
+        'The "checklists" array is empty. Add at least one rule.'
       );
     });
   });
@@ -96,7 +96,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-rule.yml')).toThrow(
-        'Regola checklist #1 in "bad-rule.yml": deve essere un oggetto. Trovato: string'
+        'Checklist rule #1 in "bad-rule.yml": must be an object. Found: string'
       );
     });
 
@@ -107,7 +107,7 @@ checklists:
 `);
       
       expect(() => loadConfig('no-when.yml')).toThrow(
-        'Regola checklist #1 in "no-when.yml": proprietà "when" mancante. Specifica i pattern glob dei file da matchare.'
+        'Checklist rule #1 in "no-when.yml": missing "when" property. Specify the glob patterns of the files to match.'
       );
     });
 
@@ -119,7 +119,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-when.yml')).toThrow(
-        'Regola checklist #1 in "bad-when.yml": "when" deve essere un array di pattern glob. Trovato: string'
+        'Checklist rule #1 in "bad-when.yml": "when" must be an array of glob patterns. Found: string'
       );
     });
 
@@ -131,7 +131,7 @@ checklists:
 `);
       
       expect(() => loadConfig('empty-when.yml')).toThrow(
-        'Regola checklist #1 in "empty-when.yml": array "when" è vuoto. Specifica almeno un pattern glob.'
+        'Checklist rule #1 in "empty-when.yml": "when" array is empty. Specify at least one glob pattern.'
       );
     });
 
@@ -143,7 +143,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-pattern.yml')).toThrow(
-        'Regola checklist #1 in "bad-pattern.yml": pattern #2 in "when" deve essere una stringa. Trovato: number'
+        'Checklist rule #1 in "bad-pattern.yml": pattern #2 in "when" must be a string. Found: number'
       );
     });
 
@@ -155,7 +155,7 @@ checklists:
 `);
       
       expect(() => loadConfig('empty-pattern.yml')).toThrow(
-        'Regola checklist #1 in "empty-pattern.yml": pattern #2 in "when" è vuoto.'
+        'Checklist rule #1 in "empty-pattern.yml": pattern #2 in "when" is empty.'
       );
     });
 
@@ -166,7 +166,7 @@ checklists:
 `);
       
       expect(() => loadConfig('no-require.yml')).toThrow(
-        'Regola checklist #1 in "no-require.yml": proprietà "require" mancante. Specifica gli item della checklist.'
+        'Checklist rule #1 in "no-require.yml": missing "require" property. Specify the checklist items.'
       );
     });
 
@@ -178,7 +178,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-require.yml')).toThrow(
-        'Regola checklist #1 in "bad-require.yml": "require" deve essere un array di stringhe. Trovato: string'
+        'Checklist rule #1 in "bad-require.yml": "require" must be an array of strings. Found: string'
       );
     });
 
@@ -190,7 +190,7 @@ checklists:
 `);
       
       expect(() => loadConfig('empty-require.yml')).toThrow(
-        'Regola checklist #1 in "empty-require.yml": array "require" è vuoto. Specifica almeno un item della checklist.'
+        'Checklist rule #1 in "empty-require.yml": "require" array is empty. Specify at least one checklist item.'
       );
     });
 
@@ -202,7 +202,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-item.yml')).toThrow(
-        'Regola checklist #1 in "bad-item.yml": item #2 in "require" deve essere una stringa. Trovato: number'
+        'Checklist rule #1 in "bad-item.yml": item #2 in "require" must be a string. Found: number'
       );
     });
 
@@ -214,7 +214,7 @@ checklists:
 `);
       
       expect(() => loadConfig('empty-item.yml')).toThrow(
-        'Regola checklist #1 in "empty-item.yml": item #2 in "require" è vuoto.'
+        'Checklist rule #1 in "empty-item.yml": item #2 in "require" is empty.'
       );
     });
 
@@ -227,7 +227,7 @@ checklists:
 `);
       
       expect(() => loadConfig('bad-optional.yml')).toThrow(
-        'Regola checklist #1 in "bad-optional.yml": "optional" deve essere true/false. Trovato: string'
+        'Checklist rule #1 in "bad-optional.yml": "optional" must be true/false. Found: string'
       );
     });
 
@@ -254,7 +254,7 @@ options: "not an object"
 `);
       
       expect(() => loadConfig('bad-options.yml')).toThrow(
-        '"options" deve essere un oggetto. Trovato: string'
+        '"options" must be an object. Found: string'
       );
     });
 
@@ -268,7 +268,7 @@ options:
 `);
       
       expect(() => loadConfig('bad-label-filter.yml')).toThrow(
-        'options.label_filter deve essere un array. Trovato: string'
+        'options.label_filter must be an array. Found: string'
       );
     });
 
@@ -282,7 +282,7 @@ options:
 `);
       
       expect(() => loadConfig('bad-label-item.yml')).toThrow(
-        'options.label_filter[1] deve essere una stringa. Trovato: number'
+        'options.label_filter[1] must be a string. Found: number'
       );
     });
 
@@ -296,7 +296,7 @@ options:
 `);
       
       expect(() => loadConfig('bad-branch.yml')).toThrow(
-        'options.branch_pattern deve essere una stringa. Trovato: number'
+        'options.branch_pattern must be a string. Found: number'
       );
     });
 
@@ -310,7 +310,7 @@ options:
 `);
       
       expect(() => loadConfig('bad-header.yml')).toThrow(
-        'options.comment_header deve essere una stringa. Trovato: number'
+        'options.comment_header must be a string. Found: number'
       );
     });
 
@@ -345,7 +345,7 @@ checklists:
 `);
       
       expect(() => loadConfig('multi-rules.yml')).toThrow(
-        'Regola checklist #2 in "multi-rules.yml": item #1 in "require" deve essere una stringa. Trovato: number'
+        'Checklist rule #2 in "multi-rules.yml": item #1 in "require" must be a string. Found: number'
       );
     });
 
@@ -372,7 +372,7 @@ checklists:
       mockReadFileSync.mockReturnValue('null');
       
       expect(() => loadConfig('null.yml')).toThrow(
-        'Config YAML vuoto o non valido in "null.yml". Il file deve contenere un oggetto YAML.'
+        'Empty or invalid YAML config in "null.yml". The file must contain a YAML object.'
       );
     });
 
@@ -399,8 +399,8 @@ checklists:
 `);
       
       const config = loadConfig(); // No path provided
-      expect(config.checklists).toHaveLength(1);
-      expect(mockReadFileSync).toHaveBeenCalledWith('.github/scope-mate.yml', 'utf8');
+  expect(config.checklists).toHaveLength(1);
+  expect(mockReadFileSync).toHaveBeenCalledWith('.github/scope-mate.yml', 'utf8');
     });
   });
 

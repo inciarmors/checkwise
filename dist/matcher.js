@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getMatchingRules = getMatchingRules;
 const micromatch_1 = __importDefault(require("micromatch"));
 /**
- * Restituisce le regole che matchano almeno un file modificato.
- * @param changedFilePaths Lista dei file modificati nella PR
- * @param rules Array di regole checklist dalla config
- * @returns Solo le regole che matchano almeno un file
+ * Returns the rules that match at least one changed file.
+ * @param changedFilePaths List of files changed in the PR
+ * @param rules Array of checklist rules from config
+ * @returns Only the rules that match at least one file
  */
 function getMatchingRules(changedFilePaths, rules) {
     return rules.filter(rule => {
-        // Se almeno un file matcha uno dei glob pattern della regola, la regola è attiva
+        // If at least one file matches one of the rule's glob patterns, the rule is active
         return (0, micromatch_1.default)(changedFilePaths, rule.when).length > 0;
     });
 }

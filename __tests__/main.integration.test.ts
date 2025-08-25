@@ -17,7 +17,7 @@ checklists:
     require: ["Test coverage > 90%"]
 `;
       }
-      // Per tutti gli altri file, usa il comportamento reale
+  // For all other files, use the real behavior
       return originalFs.readFileSync(path, ...args);
     },
   };
@@ -96,15 +96,15 @@ describe('Checkwise Action Integration', () => {
   });
 
   it('calls setFailed on error', async () => {
-    // Mock error nella fase di validazione input
+  // Mock error in the input validation phase
     (core.getInput as jest.Mock).mockImplementation((name: string) => {
       if (name === 'github-token') return ''; // Token vuoto triggera la validazione
       return '';
     });
     await run();
-    expect(core.setFailed).toHaveBeenCalledWith(
-      expect.stringContaining('Input "github-token" è richiesto e non può essere vuoto')
-    );
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining('Input "github-token" is required and cannot be empty')
+      );
   });
   it('uses default config-path if not provided', async () => {
     (core.getInput as jest.Mock).mockImplementation((name: string) => {
@@ -128,13 +128,13 @@ describe('Checkwise Action Integration', () => {
   it('calls setFailed if GitHub context is missing', async () => {
     (github.context as any).repo = null;
     await run();
-    expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/GitHub non disponibile/));
+  expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/GitHub context not available/));
   });
 
   it('calls setFailed if repository context is incomplete', async () => {
     (github.context as any).repo = { owner: '', repo: 'test-repo' };
     await run();
-    expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/Repository context incompleto/));
+  expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/Repository context is incomplete/));
   });
 
   it('calls setFailed with helpful message for invalid event type', async () => {
@@ -149,7 +149,7 @@ describe('Checkwise Action Integration', () => {
   it('calls setFailed for invalid PR number format', async () => {
     (github.context as any).payload = { pull_request: { number: -1 } };
     await run();
-    expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/Numero PR non valido: -1/));
+  expect(core.setFailed).toHaveBeenCalledWith(expect.stringMatching(/Invalid PR number: -1/));
   });
 
   it('logs helpful context information on success', async () => {
@@ -162,7 +162,7 @@ describe('Checkwise Action Integration', () => {
     await run();
 
     expect(core.info).toHaveBeenCalledWith(
-      '✅ Input validati: repo=test-owner/test-repo, PR=#42, config=__tests__/fixtures/integration-config.yml'
+      'Inputs validated: repo=test-owner/test-repo, PR=#42, config=__tests__/fixtures/integration-config.yml'
     );
   });
 
@@ -172,7 +172,7 @@ describe('Checkwise Action Integration', () => {
     await run();
 
     expect(core.info).toHaveBeenCalledWith(
-      '⚠️ Nessun file modificato trovato nella PR. Nessuna checklist generata.'
+      'No changed files found in the PR. No checklist generated.'
     );
     expect(octokit.rest.issues.createComment).not.toHaveBeenCalled();
   });
@@ -185,7 +185,7 @@ describe('Checkwise Action Integration', () => {
     await run();
 
     expect(core.info).toHaveBeenCalledWith(
-      '🎯 Nessuna regola matchata per i file modificati. Nessuna checklist richiesta.'
+      'No rules matched for the changed files. No checklist required.'
     );
     expect(octokit.rest.issues.createComment).not.toHaveBeenCalled();
   });

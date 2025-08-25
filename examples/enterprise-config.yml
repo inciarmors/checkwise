@@ -106,4 +106,4 @@ checklists:
 # Global Options for Enterprise Environment
 options:
   branch_pattern: "feature/*"  # Only apply to feature branches
-  comment_header: "🏢 Enterprise Compliance Checklist"
+  comment_header: "Enterprise Compliance Checklist"

@@ -1,10 +1,10 @@
 module.exports = {
-  preset: 'ts-jest', // Usa ts-jest per supporto TypeScript
-  testEnvironment: 'node', // Simula ambiente Node.js (come gira Checkwise)
-  roots: ['<rootDir>/__tests__'], // Dove cercare i test
+  preset: 'ts-jest', // Use ts-jest for TypeScript support
+  testEnvironment: 'node', // Simulate Node.js environment (as Checkwise runs)
+  roots: ['<rootDir>/__tests__'], // Where to look for tests
   moduleFileExtensions: ['ts', 'js', 'json'],
-  testMatch: ['**/*.test.ts'], // Pattern dei file di test
-  collectCoverage: true, // Attiva la raccolta della copertura
+  testMatch: ['**/*.test.ts'], // Test file pattern
+  collectCoverage: true, // Enable coverage collection
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
 };

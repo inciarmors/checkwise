@@ -1,8 +1,8 @@
 
 import * as github from '@actions/github';
 
-// Helper per gestire rate limiting e network failures
-async function safeApiCall<T>(fn: () => Promise<T>, retries = 2): Promise<T> {
+// Helper to handle rate limiting and network failures
+export async function safeApiCall<T>(fn: () => Promise<T>, retries = 2): Promise<T> {
   let lastErr;
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
@@ -21,8 +21,8 @@ async function safeApiCall<T>(fn: () => Promise<T>, retries = 2): Promise<T> {
         }
         throw new Error('Network error while contacting GitHub API. Please retry.');
       }
-      // Altri errori: rilancia
-      throw err;
+  // Other errors: rethrow
+  throw err;
     }
   }
   throw lastErr;
@@ -53,7 +53,7 @@ export async function getChangedFiles(token: string, prNumber: number): Promise<
 }
 
 /**
- * Trova un commento esistente di Checkwise nella PR (usando un marker unico).
+ * Finds an existing Checkwise comment in the PR (using a unique marker).
  */
 export async function findCheckwiseComment(token: string, prNumber: number, marker: string): Promise<{id: number, body: string} | null> {
   const octokit = github.getOctokit(token);
@@ -75,7 +75,7 @@ export async function findCheckwiseComment(token: string, prNumber: number, mark
 }
 
 /**
- * Crea un nuovo commento nella PR.
+ * Creates a new comment in the PR.
  */
 export async function createComment(token: string, prNumber: number, body: string) {
   const octokit = github.getOctokit(token);
@@ -91,7 +91,7 @@ export async function createComment(token: string, prNumber: number, body: strin
 }
 
 /**
- * Aggiorna un commento esistente nella PR.
+ * Updates an existing comment in the PR.
  */
 export async function updateComment(token: string, commentId: number, body: string) {
   const octokit = github.getOctokit(token);

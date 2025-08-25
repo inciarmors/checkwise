@@ -9,16 +9,16 @@ describe('validateInputs', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    // Import dopo aver mockato le dipendenze
+  // Import after mocking dependencies
     validateInputs = (await import('../src/main')).validateInputs;
   });
 
   describe('GitHub token validation', () => {
     it('should accept valid GitHub tokens', () => {
       (core.getInput as jest.Mock).mockImplementation((name: string) => {
-        if (name === 'github-token') return 'ghp_validtoken123';
-        if (name === 'config-path') return '.github/scope-mate.yml';
-        return '';
+      if (name === 'github-token') return 'ghp_validtoken123';
+      if (name === 'config-path') return '.github/checkwise.yml';
+      return '';
       });
 
       const result = validateInputs();
@@ -27,9 +27,9 @@ describe('validateInputs', () => {
 
     it('should accept GitHub App tokens', () => {
       (core.getInput as jest.Mock).mockImplementation((name: string) => {
-        if (name === 'github-token') return 'ghs_apptoken123';
-        if (name === 'config-path') return '.github/scope-mate.yml';
-        return '';
+      if (name === 'github-token') return 'ghs_apptoken123';
+      if (name === 'config-path') return '.github/checkwise.yml';
+      return '';
       });
 
       const result = validateInputs();
@@ -38,9 +38,9 @@ describe('validateInputs', () => {
 
     it('should accept fine-grained personal access tokens', () => {
       (core.getInput as jest.Mock).mockImplementation((name: string) => {
-        if (name === 'github-token') return 'github_pat_validtoken123';
-        if (name === 'config-path') return '.github/scope-mate.yml';
-        return '';
+      if (name === 'github-token') return 'github_pat_validtoken123';
+      if (name === 'config-path') return '.github/checkwise.yml';
+      return '';
       });
 
       const result = validateInputs();
@@ -53,7 +53,7 @@ describe('validateInputs', () => {
         return '';
       });
 
-      expect(() => validateInputs()).toThrow('Input "github-token" è richiesto e non può essere vuoto');
+  expect(() => validateInputs()).toThrow('Input "github-token" is required and cannot be empty');
     });
 
     it('should throw error for whitespace-only token', () => {
@@ -62,20 +62,20 @@ describe('validateInputs', () => {
         return '';
       });
 
-      expect(() => validateInputs()).toThrow('Input "github-token" è richiesto e non può essere vuoto');
+  expect(() => validateInputs()).toThrow('Input "github-token" is required and cannot be empty');
     });
 
     it('should warn for unexpected token format', () => {
-      (core.getInput as jest.Mock).mockImplementation((name: string) => {
-        if (name === 'github-token') return 'invalid_format_token';
-        if (name === 'config-path') return '.github/scope-mate.yml';
-        return '';
-      });
+        (core.getInput as jest.Mock).mockImplementation((name: string) => {
+          if (name === 'github-token') return 'invalid_format_token';
+          if (name === 'config-path') return '.github/checkwise.yml';
+          return '';
+        });
       (core.warning as jest.Mock).mockImplementation(() => {});
 
       validateInputs();
       expect(core.warning).toHaveBeenCalledWith(
-        'GitHub token format inaspettato. Assicurati di usare un token valido.'
+        'Unexpected GitHub token format. Make sure you are using a valid token.'
       );
     });
   });
@@ -92,10 +92,10 @@ describe('validateInputs', () => {
       (core.info as jest.Mock).mockImplementation(() => {});
 
       const result = validateInputs();
-      expect(result.configPath).toBe('.github/scope-mate.yml');
-      expect(core.info).toHaveBeenCalledWith(
-        'Nessun config-path specificato, usando default: .github/scope-mate.yml'
-      );
+        expect(result.configPath).toBe('.github/checkwise.yml');
+        expect(core.info).toHaveBeenCalledWith(
+          'No config-path specified, using default: .github/checkwise.yml'
+        );
     });
 
     it('should use provided config path', () => {
@@ -128,7 +128,7 @@ describe('validateInputs', () => {
       });
 
       expect(() => validateInputs()).toThrow(
-        'Config path non sicuro: "../malicious/config.yml". Usa path relativi senza ".." o path assoluti.'
+        'Unsafe config path: "../malicious/config.yml". Use relative paths without ".." or absolute paths.'
       );
     });
 
@@ -140,7 +140,7 @@ describe('validateInputs', () => {
       });
 
       expect(() => validateInputs()).toThrow(
-        'Config path non sicuro: "/etc/passwd". Usa path relativi senza ".." o path assoluti.'
+        'Unsafe config path: "/etc/passwd". Use relative paths without ".." or absolute paths.'
       );
     });
 
@@ -154,7 +154,7 @@ describe('validateInputs', () => {
 
       validateInputs();
       expect(core.warning).toHaveBeenCalledWith(
-        'Config path "config.txt" non termina con .yml/.yaml. Assicurati che sia un file YAML.'
+        'Config path "config.txt" does not end with .yml/.yaml. Make sure it is a YAML file.'
       );
     });
 
@@ -174,11 +174,11 @@ describe('validateInputs', () => {
 
   describe('Marker validation', () => {
     it('should return the default marker', () => {
-      (core.getInput as jest.Mock).mockImplementation((name: string) => {
-        if (name === 'github-token') return 'ghp_validtoken123';
-        if (name === 'config-path') return '.github/scope-mate.yml';
-        return '';
-      });
+        (core.getInput as jest.Mock).mockImplementation((name: string) => {
+          if (name === 'github-token') return 'ghp_validtoken123';
+          if (name === 'config-path') return '.github/checkwise.yml';
+          return '';
+        });
 
       const result = validateInputs();
       expect(result.marker).toBe('<!-- checkwise-marker -->');

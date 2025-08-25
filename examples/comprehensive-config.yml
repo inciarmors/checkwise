@@ -8,10 +8,10 @@ checklists:
       - "components/**/*.{tsx,jsx,vue}"
       - "styles/**/*.{css,scss,sass}"
     require:
-      - "🖼️ Screenshot prima/dopo allegato"
-      - "♿ Test di accessibility eseguiti (ARIA, contrast)"
-      - "📱 Testato su mobile e desktop"
-      - "🔗 Issue/ticket linkato nella descrizione"
+  - "Screenshot before/after attached"
+  - "Accessibility tests performed (ARIA, contrast)"
+  - "Tested on mobile and desktop"
+  - "Issue/ticket linked in the description"
 
   # Backend API changes
   - when:
@@ -19,10 +19,10 @@ checklists:
       - "src/routes/**/*.ts"
       - "**/*api*.ts"
     require:
-      - "📚 Documentazione API aggiornata"
-      - "🔄 Backward compatibility verificata"
-      - "⚡ Rate limiting considerato"
-      - "🧪 Test di carico eseguiti se necessario"
+  - "API documentation updated"
+  - "Backward compatibility verified"
+  - "Rate limiting considered"
+  - "Load tests performed if necessary"
 
   # Database migrations
   - when:
@@ -30,10 +30,10 @@ checklists:
       - "prisma/migrations/**"
       - "**/*.sql"
     require:
-      - "📋 Piano di rollback documentato"
-      - "🔄 Backfill/cleanup pianificato se necessario"
-      - "🧪 Testato su dataset di staging"
-      - "👥 Review DBA richiesta (@db-team)"
+  - "Rollback plan documented"
+  - "Backfill/cleanup planned if necessary"
+  - "Tested on staging dataset"
+  - "DBA review requested (@db-team)"
 
   # Infrastructure changes
   - when:
@@ -43,10 +43,10 @@ checklists:
       - "k8s/**/*.yaml"
       - "docker/**"
     require:
-      - "📊 `terraform plan` incollato negli artifacts"
-      - "💰 Impatto sui costi stimato"
-      - "🔙 Plan di rollback infra definito"
-      - "👥 Review DevOps approvata (@devops-team)"
+  - "`terraform plan` pasted in artifacts"
+  - "Estimated cost impact"
+  - "Infra rollback plan defined"
+  - "DevOps review approved (@devops-team)"
 
   # Security-sensitive areas
   - when:
@@ -55,10 +55,10 @@ checklists:
       - "**/*auth*.ts"
       - "middleware/security/**"
     require:
-      - "🔒 Security review richiesta (@security-team)"
-      - "🔍 Test di penetrazione eseguiti"
-      - "📝 Logging di audit implementato"
-      - "✅ Compliance verificata"
+  - "Security review requested (@security-team)"
+  - "Penetration tests performed"
+  - "Audit logging implemented"
+  - "Compliance verified"
 
 # Advanced options for fine-tuned control
 options:
@@ -72,4 +72,4 @@ options:
     - "bugfix"
   
   # Custom header for the generated comment
-  comment_header: "🚀 **Team Checklist Review**"
+  comment_header: "Team Checklist Review"
