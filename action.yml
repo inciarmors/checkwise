@@ -12,7 +12,7 @@ inputs:
     default: '.github/checkwise.yml'
 runs:
   using: 'node20'
-  main: 'dist/index.js'
+  main: 'dist/main.js'
 branding:
   icon: 'check-square'
   color: 'blue'
