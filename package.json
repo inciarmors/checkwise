@@ -6,10 +6,10 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "ncc build src/main.ts -o dist && move dist\\index.js dist\\main.js && del dist\\*.map 2>nul",
+    "build": "ncc build src/main.ts -o dist && node -e \"const fs=require('fs'); fs.renameSync('dist/index.js','dist/main.js'); try{fs.unlinkSync('dist/index.js.map')}catch(e){}\"",
     "dev": "tsc --watch",
     "lint": "tsc --noEmit",
-    "clean": "rmdir /s /q dist 2>nul & rmdir /s /q coverage 2>nul & echo Cleaned"
+    "clean": "rimraf dist coverage"
   },
   "keywords": [
     "github-action",
@@ -44,7 +44,9 @@
     "@types/micromatch": "^4.0.9",
     "@types/node": "^24.3.0",
     "@vercel/ncc": "^0.38.3",
+    "cross-env": "^10.0.0",
     "jest": "^30.0.5",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
   }
