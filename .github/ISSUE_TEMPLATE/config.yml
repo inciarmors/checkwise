@@ -1,0 +1,77 @@
+name: Configuration Help
+description: Get help with Checkwise configuration
+title: "[Help]: "
+labels: ["question", "documentation"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help configuring Checkwise? We're here to help!
+        
+        Please check our [documentation](https://github.com/inciarmors/checkwise/blob/main/README.MD) first.
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: What are you trying to achieve?
+      description: Describe your use case and what you want Checkwise to do
+      placeholder: |
+        I want to create checklists that...
+        My team needs to ensure...
+        When developers modify X files, they should...
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-config
+    attributes:
+      label: Current Configuration
+      description: Share your current configuration if you have one
+      render: yaml
+      placeholder: |
+        checklists:
+          - when: ["src/**"]
+            require: ["Something"]
+    validations:
+      required: false
+
+  - type: textarea
+    id: files-structure
+    attributes:
+      label: Repository Structure
+      description: |
+        Describe your repository structure and file patterns.
+        This helps us suggest the right glob patterns.
+      placeholder: |
+        src/
+        ├── components/
+        ├── pages/
+        ├── utils/
+        api/
+        ├── routes/
+        ├── models/
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: help-type
+    attributes:
+      label: Type of Help Needed
+      description: What kind of help do you need?
+      options:
+        - label: Glob pattern configuration
+        - label: Workflow setup
+        - label: Advanced configuration options
+        - label: Troubleshooting existing setup
+        - label: Best practices guidance
+        - label: Integration with other tools
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

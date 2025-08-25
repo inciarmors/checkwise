@@ -1,0 +1,22 @@
+# Simple Configuration
+# Perfect for small teams or personal projects
+
+checklists:
+  # Any source code changes
+  - when: ["src/**", "lib/**", "app/**"]
+    require:
+      - "Code review completed"
+      - "Tests added or updated"
+      - "Documentation updated if needed"
+
+  # Configuration changes
+  - when: ["*.json", "*.yml", "*.yaml", "*.toml", "*.ini"]
+    require:
+      - "Configuration changes reviewed"
+      - "Impact on environments considered"
+
+  # Dependencies
+  - when: ["package.json", "package-lock.json", "yarn.lock", "requirements.txt", "Gemfile*", "go.mod"]
+    require:
+      - "Security audit of new dependencies"
+      - "License compatibility verified"

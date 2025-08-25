@@ -1,0 +1,109 @@
+# Enterprise Configuration
+# Comprehensive configuration for large organizations with strict compliance requirements
+
+checklists:
+  # Frontend Development - UI/UX Critical
+  - when: ["src/**/*.{tsx,jsx,vue,svelte}", "components/**", "pages/**", "styles/**", "assets/**"]
+    require:
+      - "UI/UX design review completed (@design-team)"
+      - "Accessibility audit performed (WCAG 2.1 AA compliance)"
+      - "Cross-browser testing completed (Chrome, Firefox, Safari, Edge)"
+      - "Mobile responsiveness verified"
+      - "Performance impact assessed (bundle size, Core Web Vitals)"
+      - "Design system compliance verified"
+      - "Visual regression tests updated"
+      - "Screenshots attached (before/after)"
+      - "Internationalization considered"
+
+  # Backend API Development - Security Critical
+  - when: ["api/**", "routes/**", "controllers/**", "services/**", "**/*api*.{ts,js,py,go,java}"]
+    require:
+      - "API security review completed (@security-team)"
+      - "OpenAPI/Swagger specification updated"
+      - "API documentation published to internal portal"
+      - "Backward compatibility verified and documented"
+      - "Rate limiting configured and tested"
+      - "Authentication/authorization mechanisms tested"
+      - "Input validation and sanitization verified"
+      - "Error handling does not expose sensitive information"
+      - "Load testing performed for high-traffic endpoints"
+      - "Monitoring and alerting configured"
+
+  # Database Operations - Data Critical
+  - when: ["migrations/**", "schema/**", "**/*.sql", "**/*migration*", "**/*schema*"]
+    require:
+      - "Database administrator review required (@dba-team)"
+      - "Migration tested on staging environment"
+      - "Rollback procedure documented and tested"
+      - "Performance impact on large datasets assessed"
+      - "Index optimization strategy documented"
+      - "Data backup and recovery plan verified"
+      - "GDPR/compliance implications reviewed"
+      - "Query performance analyzed"
+      - "Foreign key constraints validated"
+
+  # Infrastructure as Code - DevOps Critical
+  - when: ["terraform/**", "k8s/**", "kubernetes/**", "infra/**", "infrastructure/**", "docker/**", "*.dockerfile", "helm/**"]
+    require:
+      - "Infrastructure review completed (@devops-team)"
+      - "Security scan passed (Terraform security, container scanning)"
+      - "Cost impact analysis completed and approved"
+      - "Resource limits and quotas configured"
+      - "Monitoring, logging, and alerting configured"
+      - "Disaster recovery plan updated"
+      - "Compliance requirements verified (SOC2, ISO27001)"
+      - "Change management process followed"
+      - "Rollback procedure documented"
+
+  # Security-Critical Changes - Maximum Scrutiny
+  - when: ["**/*auth*", "**/*security*", "**/*crypto*", "**/*password*", "**/*jwt*", "**/*oauth*", "**/*saml*"]
+    require:
+      - "Security architect review required (@security-architects)"
+      - "Threat model updated and reviewed"
+      - "Security tests added (SAST, DAST, penetration testing)"
+      - "Compliance requirements verified (PCI-DSS, HIPAA, SOX)"
+      - "Cryptographic implementations reviewed"
+      - "Key management strategy documented"
+      - "Access control matrix updated"
+      - "Security incident response plan reviewed"
+
+  # CI/CD Pipeline Changes - DevOps Critical
+  - when: [".github/**", ".gitlab-ci.yml", "jenkins/**", "buildkite/**", "azure-pipelines.yml", "**/*pipeline*"]
+    require:
+      - "DevOps team approval required (@devops-team)"
+      - "Pipeline security review completed"
+      - "Secrets and credentials properly managed"
+      - "Build reproducibility verified"
+      - "Deployment strategy reviewed"
+      - "Monitoring and alerting for pipeline failures"
+
+  # Documentation Changes - Knowledge Management
+  - when: ["docs/**", "README*", "CHANGELOG*", "**/*.md", "wiki/**"]
+    require:
+      - "Technical writing review (@tech-writers)"
+      - "Accuracy of technical content verified"
+      - "Links and references validated"
+      - "Searchability and discoverability considered"
+
+  # Dependencies and Third-Party Integration
+  - when: ["package.json", "package-lock.json", "requirements.txt", "Gemfile*", "go.mod", "pom.xml", "build.gradle"]
+    require:
+      - "Security team dependency review (@security-team)"
+      - "License compatibility verified with legal team"
+      - "Vulnerability scan completed"
+      - "Business continuity impact assessed"
+      - "Vendor assessment completed for new third-party services"
+
+  # Configuration and Environment Files
+  - when: ["**/*config*", "**/*env*", "**/*.properties", "**/*.ini", "**/*.toml"]
+    require:
+      - "Configuration review completed (@platform-team)"
+      - "Security implications of config changes assessed"
+      - "Environment parity verified (dev/staging/prod)"
+      - "Secrets management strategy followed"
+      - "Rollback plan for configuration changes"
+
+# Global Options for Enterprise Environment
+options:
+  branch_pattern: "feature/*"  # Only apply to feature branches
+  comment_header: "🏢 Enterprise Compliance Checklist"

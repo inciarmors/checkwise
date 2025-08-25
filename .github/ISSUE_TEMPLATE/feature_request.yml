@@ -1,0 +1,104 @@
+name: Feature Request
+description: Suggest a new feature or improvement for Checkwise
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Your ideas help make Checkwise better.
+        
+        Please search existing issues and discussions before submitting to avoid duplicates.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: |
+        Is your feature request related to a problem? Please describe the problem you're trying to solve.
+      placeholder: |
+        I'm frustrated when I have to...
+        It's difficult to...
+        Current limitations include...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: |
+        Describe the solution you'd like to see implemented.
+        Be as specific as possible about how it should work.
+      placeholder: |
+        I would like to be able to...
+        The feature should work by...
+        Example configuration:
+        ```yaml
+        # Your proposed configuration here
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: |
+        Describe any alternative solutions or workarounds you've considered.
+        Have you found any existing tools that solve this problem?
+      placeholder: |
+        I considered using...
+        Another approach would be...
+        Currently I work around this by...
+    validations:
+      required: false
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: |
+        Provide specific examples of how this feature would be used.
+        Who would benefit from this feature?
+      placeholder: |
+        This would help teams that...
+        Example scenarios:
+        1. When working on frontend code...
+        2. For enterprise environments...
+        3. In monorepo setups...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would improve my workflow
+        - High - Blocking my adoption/usage
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you be interested in contributing to this feature?
+      options:
+        - label: I'm willing to implement this feature
+        - label: I can help with testing
+        - label: I can help with documentation
+        - label: I can provide feedback during development
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
