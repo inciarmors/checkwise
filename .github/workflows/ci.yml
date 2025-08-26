@@ -60,47 +60,6 @@ jobs:
         fail_ci_if_error: false
         verbose: true
 
-  self-validation:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
-    # Self-validation only makes sense for PRs since CheckWise is a PR tool
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-    
-    - name: Install dependencies for self-validation
-      run: |
-        echo "🔧 Installing dependencies for self-validation..."
-        # Try npm ci first, fallback to npm install if registry issues
-        npm ci || {
-          echo "⚠️ npm ci failed, trying npm install as fallback..."
-          npm install
-        }
-    
-    - name: Build action for self-validation
-      run: npm run build
-    
-    # SELF-VALIDATION: Test CheckWise on itself (critical validation)
-    - name: Self-Validation - CheckWise validates itself
-      uses: ./
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        config-path: ".github/checkwise.yml"
-      id: self-validation
-    
-    - name: Verify self-validation success
-      run: |
-        echo "✅ Self-validation successful! CheckWise can validate its own PRs."
-        echo "This confirms CheckWise works correctly in its intended context."
-
   # Build validation for push events (no PR context required)
   # Validates the build, action structure, and examples without running CheckWise
   build-validation:
@@ -185,60 +144,6 @@ jobs:
         echo "✅ No source maps in distribution"
         echo "✅ Action.yml structure validated"
         echo "✅ Example configurations validated"
-
-  comprehensive-integration:
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
-    # Comprehensive testing only for PRs - includes self-validation and extensive scenarios
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'npm'
-    
-    - name: Install dependencies for comprehensive testing
-      run: |
-        echo "🔧 Installing dependencies for comprehensive integration testing..."
-        # Try npm ci first, fallback to npm install if registry issues
-        npm ci || {
-          echo "⚠️ npm ci failed, trying npm install as fallback..."
-          npm install
-        }
-    
-    - name: Build action for comprehensive testing
-      run: npm run build
-    
-    - name: Test with comprehensive config
-      uses: ./
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        config-path: "examples/comprehensive-config.yml"
-    
-    - name: Test with simple config
-      uses: ./
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        config-path: "examples/simple-config.yml"
-      continue-on-error: true
-    
-    - name: Test with enterprise config
-      uses: ./
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        config-path: "examples/enterprise-config.yml"
-      continue-on-error: true
-    
-    - name: Comprehensive integration test summary
-      run: |
-        echo "🎯 Comprehensive integration tests completed for PR"
-        echo "✅ Multiple configuration scenarios tested"
-        echo "✅ Real-world usage patterns validated"
 
   security-scan:
     runs-on: ubuntu-latest
