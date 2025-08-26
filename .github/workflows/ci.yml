@@ -137,12 +137,12 @@ jobs:
     
     - name: Build validation summary
       run: |
-        echo "🎯 Build validation completed for push event"
-        echo "✅ TypeScript compilation verified"
-        echo "✅ Bundle packaging verified"
-        echo "✅ No source maps in distribution"
-        echo "✅ Action.yml structure validated"
-        echo "✅ Example configurations validated"
+        echo "Build validation completed for push event"
+        echo "TypeScript compilation verified"
+        echo "Bundle packaging verified"
+        echo "No source maps in distribution"
+        echo "Action.yml structure validated"
+        echo "Example configurations validated"
 
   security-scan:
     runs-on: ubuntu-latest

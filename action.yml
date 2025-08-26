@@ -7,7 +7,7 @@ inputs:
     required: true
     default: ${{ github.token }}
   config-path:
-    description: 'Path to YAML configuration file'
+    description: 'Path(s) to YAML configuration file(s). You can specify multiple files separated by comma (e.g. ".github/checkwise.yml,.github/checkwise-teamA.yml")'
     required: false
     default: '.github/checkwise.yml'
 runs:

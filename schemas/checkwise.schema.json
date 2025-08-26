@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CheckWise Configuration Schema",
+  "description": "JSON Schema for .github/checkwise.yml configuration file for CheckWise GitHub Action.",
+  "type": "object",
+  "properties": {
+    "checklists": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "when": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "File path glob patterns to match."
+          },
+          "require": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Checklist items required for this rule."
+          },
+          "optional": {
+            "type": "boolean",
+            "description": "If true, this rule is optional. Default: false."
+          }
+        },
+        "required": ["when", "require"],
+        "additionalProperties": false
+      },
+      "description": "List of checklist rules."
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "branch_pattern": {
+          "type": "string",
+          "description": "Glob pattern for branches where the checklist applies."
+        },
+        "label_filter": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of PR labels to filter."
+        },
+        "comment_header": {
+          "type": "string",
+          "description": "Custom header for the checklist comment."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["checklists"],
+  "additionalProperties": false
+}

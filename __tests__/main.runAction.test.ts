@@ -15,28 +15,36 @@ describe('runAction (pure orchestration)', () => {
   };
 
   it('runs happy path (new comment)', async () => {
-    const deps = { ...baseDeps, findCheckwiseComment: jest.fn(() => null) };
-    await runAction(deps);
+  const setCommitStatus = jest.fn();
+  const deps = { ...baseDeps, findCheckwiseComment: jest.fn(() => null), setCommitStatus };
+  await runAction(deps);
+  expect(setCommitStatus).toHaveBeenCalled();
     expect(deps.createComment).toHaveBeenCalled();
     expect(deps.updateComment).not.toHaveBeenCalled();
   });
 
   it('runs happy path (update comment)', async () => {
-    const deps = { ...baseDeps, findCheckwiseComment: jest.fn(() => ({ id: 1, body: 'old' })), createComment: jest.fn() };
-    await runAction(deps);
+  const setCommitStatus = jest.fn();
+  const deps = { ...baseDeps, findCheckwiseComment: jest.fn(() => ({ id: 1, body: 'old' })), createComment: jest.fn(), setCommitStatus };
+  await runAction(deps);
+  expect(setCommitStatus).toHaveBeenCalled();
     expect(deps.updateComment).toHaveBeenCalled();
   // createComment can be called if update fails, so we do not assert that it is not called
   });
 
   it('skips if no changed files', async () => {
-    const deps = { ...baseDeps, getChangedFiles: jest.fn(() => []) };
-    await runAction(deps);
+  const setCommitStatus = jest.fn();
+  const deps = { ...baseDeps, getChangedFiles: jest.fn(() => []), setCommitStatus };
+  await runAction(deps);
+  expect(setCommitStatus).not.toHaveBeenCalled();
   expect(deps.core.info).toHaveBeenCalledWith(expect.stringContaining('No changed files'));
   });
 
   it('skips if no matching rules', async () => {
-    const deps = { ...baseDeps, getMatchingRules: jest.fn(() => []) };
-    await runAction(deps);
+  const setCommitStatus = jest.fn();
+  const deps = { ...baseDeps, getMatchingRules: jest.fn(() => []), setCommitStatus };
+  await runAction(deps);
+  expect(setCommitStatus).not.toHaveBeenCalled();
   expect(deps.core.info).toHaveBeenCalledWith(expect.stringContaining('No rules matched'));
   });
 
@@ -113,7 +121,8 @@ describe('runAction (pure orchestration)', () => {
     it('logs debug information for changed files', async () => {
       const deps = { 
         ...baseDeps, 
-        getChangedFiles: jest.fn(() => ['src/file1.ts', 'src/file2.ts'])
+        getChangedFiles: jest.fn(() => ['src/file1.ts', 'src/file2.ts']),
+        setCommitStatus: jest.fn(),
       };
       await runAction(deps);
   expect(deps.core.debug).toHaveBeenCalledWith(expect.stringContaining('Files: src/file1.ts, src/file2.ts'));
@@ -124,7 +133,8 @@ describe('runAction (pure orchestration)', () => {
         ...baseDeps, 
         getChangedFiles: jest.fn(() => ['file1.ts', 'file2.ts', 'file3.ts']),
         loadConfig: jest.fn(() => ({ checklists: [{ when: ['**'], require: ['Test1'] }, { when: ['**'], require: ['Test2'] }] })),
-        getMatchingRules: jest.fn(() => [{ when: ['**'], require: ['Test1'] }, { when: ['**'], require: ['Test2'] }])
+        getMatchingRules: jest.fn(() => [{ when: ['**'], require: ['Test1'] }, { when: ['**'], require: ['Test2'] }]),
+        setCommitStatus: jest.fn(),
       };
       await runAction(deps);
   expect(deps.core.info).toHaveBeenCalledWith(expect.stringContaining('Changed files detected: 3'));

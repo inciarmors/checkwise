@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { loadConfig } from './config';
-import { getChangedFiles, findCheckwiseComment, createComment, updateComment } from './github';
+import { getChangedFiles, findCheckwiseComment, createComment, updateComment, setCommitStatus as realSetCommitStatus } from './github';
 import { getMatchingRules } from './matcher';
 import { generateChecklistMarkdown, parseChecklistStateFromMarkdown } from './checklist';
 
@@ -51,7 +51,8 @@ async function runAction({
   updateComment,
   getMatchingRules,
   generateChecklistMarkdown,
-  validateInputs
+  validateInputs,
+  setCommitStatus = realSetCommitStatus
 }: any) {
   // 1. Validate action input
   const { token, configPath, marker } = validateInputs();
@@ -84,6 +85,7 @@ async function runAction({
 
   // 4. Get changed files
   const changedFiles = await getChangedFiles(token, prNumber);
+
   if (changedFiles.length === 0) {
     core.info('No changed files found in the PR. No checklist generated.');
     return;
@@ -115,6 +117,18 @@ async function runAction({
   } else {
     await createComment(token, prNumber, checklist);
     core.info('Checklist created as a new comment.');
+  }
+
+  // 8. Parse checklist state and publish GitHub status check
+  // Parse the final checklist state from the comment just written
+  const checklistState = parseChecklistStateFromMarkdown(checklist);
+  const allChecked = Object.values(checklistState).length > 0 && Object.values(checklistState).every(Boolean);
+  if (allChecked) {
+    await setCommitStatus(token, prNumber, 'success', 'All checklist items completed', 'CheckWise');
+    core.info('Published GitHub status: success (all checklist items completed)');
+  } else {
+    await setCommitStatus(token, prNumber, 'failure', 'Checklist incomplete: please complete all items', 'CheckWise');
+    core.info('Published GitHub status: failure (checklist incomplete)');
   }
 }
 

@@ -1,3 +1,30 @@
+/**
+ * Publishes a commit status (status check) on the PR head SHA.
+ * @param token GitHub token
+ * @param prNumber Pull request number
+ * @param state 'success' | 'failure' | 'pending'
+ * @param description Short description for the status
+ * @param context Context label (e.g. 'CheckWise')
+ */
+export async function setCommitStatus(token: string, prNumber: number, state: 'success' | 'failure' | 'pending', description: string, context: string = 'CheckWise') {
+  const octokit = github.getOctokit(token);
+  const { owner, repo } = github.context.repo;
+  // Get PR details to find the head SHA
+  const pr = await safeApiCall(() =>
+    octokit.rest.pulls.get({ owner, repo, pull_number: prNumber })
+  );
+  const sha = pr.data.head.sha;
+  await safeApiCall(() =>
+    octokit.rest.repos.createCommitStatus({
+      owner,
+      repo,
+      sha,
+      state,
+      description,
+      context
+    })
+  );
+}
 
 import * as github from '@actions/github';
 
