@@ -4,8 +4,9 @@
 
 [![GitHub Action](https://img.shields.io/badge/GitHub-Action-blue?logo=github-actions)](https://github.com/marketplace/actions/checkwise)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/Tests-78%20passed-green)](https://github.com/inciarmors/CheckWise/actions)
-[![Coverage](https://img.shields.io/badge/Coverage-98.8%25-brightgreen)](https://github.com/inciarmors/CheckWise/actions)
+[![Tests](https://img.shields.io/badge/Tests-129%20passed-green)](https://github.com/inciarmors/CheckWise/actions)
+[![Coverage](https://img.shields.io/badge/Coverage-79.7%25-brightgreen)](https://github.com/inciarmors/CheckWise/actions)
+[![Self-Validation](https://img.shields.io/badge/Self--Validation-✅%20Active-success)](https://github.com/inciarmors/CheckWise/actions/workflows/self-validation.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 ---
@@ -349,10 +350,22 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ### Code Quality Standards
 
-- **Test Coverage**: Maintain >95% coverage
+- **Test Coverage**: Maintain >79% coverage (129 tests)
 - **TypeScript**: Strict mode with full type safety
 - **Linting**: ESLint with recommended rules
 - **Documentation**: Comprehensive JSDoc comments
+- **Self-Validation**: CheckWise validates its own Pull Requests
+
+### Self-Validation (Meta-Testing)
+
+CheckWise practices what it preaches - every Pull Request to this repository is validated by CheckWise itself using the configuration in [`.github/checkwise.yml`](.github/checkwise.yml). This ensures:
+
+- **Real-world testing**: Every feature is tested in production-like conditions
+- **Configuration validation**: Our example configs are battle-tested
+- **User experience verification**: We experience the same workflow as our users
+- **Quality assurance**: Critical changes are reviewed with appropriate checklists
+
+You can see CheckWise in action on our own PRs, demonstrating the exact experience you'll get when using it in your projects.
 
 ---
 

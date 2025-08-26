@@ -63,6 +63,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    - name: Build for integration testing
+      run: |
+        npm ci
+        npm run build
+    
+    # SELF-VALIDATION: Test CheckWise on itself (critical validation)
+    - name: � Self-Validation - CheckWise validates itself
+      uses: ./
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        config-path: ".github/checkwise.yml"
+      id: self-validation
+    
+    - name: Verify self-validation success
+      run: |
+        echo "✅ Self-validation successful! CheckWise can validate its own PRs."
+        echo "This is the ultimate integration test."
+    
     - name: Test action with comprehensive config
       uses: ./
       with:

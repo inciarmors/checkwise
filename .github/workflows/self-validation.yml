@@ -1,0 +1,97 @@
+name: CheckWise Self-Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited, reopened]
+    branches: [ main ]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  checkwise-self-validation:
+    runs-on: ubuntu-latest
+    name: Validate PR with CheckWise
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        # Fetch full history for better context
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build CheckWise
+      run: npm run build
+      
+    - name: Validate build output exists
+      run: |
+        ls -la dist/
+        [ -f "dist/main.js" ] || { echo "Build failed - dist/main.js not found"; exit 1; }
+        echo "Build size: $(wc -c < dist/main.js) bytes"
+    
+    # Self-validation step - CheckWise validates itself!
+    - name: Run CheckWise Self-Validation
+      uses: ./  # Use the local action (current repo)
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        config-path: '.github/checkwise.yml'
+      id: checkwise-self
+    
+    # Additional validation that CheckWise ran successfully
+    - name: Verify Self-Validation Success
+      run: |
+        echo "CheckWise self-validation completed successfully!"
+        echo "This proves that CheckWise can validate its own Pull Requests."
+
+  # Optional: Integration test with different configurations
+  checkwise-examples-validation:
+    runs-on: ubuntu-latest
+    name: Test CheckWise with example configs
+    needs: checkwise-self-validation
+    if: always() # Run even if self-validation fails, for debugging
+    
+    strategy:
+      matrix:
+        config:
+          - examples/simple-config.yml
+          - examples/comprehensive-config.yml
+          - examples/enterprise-config.yml
+      fail-fast: false
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install and build
+      run: |
+        npm ci
+        npm run build
+    
+    - name: Test CheckWise with ${{ matrix.config }}
+      uses: ./
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        config-path: ${{ matrix.config }}
+      continue-on-error: true # Allow testing even if some configs fail
+    
+    - name: Log test result
+      run: |
+        echo "Testing with config: ${{ matrix.config }}"
+        echo "This validates that CheckWise works with different configuration patterns."

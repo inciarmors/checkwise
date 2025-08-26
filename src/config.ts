@@ -24,11 +24,11 @@ export interface ChecklistRule {
 
 /**
  * Loads and validates the Checkwise YAML configuration.
- * @param path Path to the YAML file (default: .github/scope-mate.yml)
+ * @param path Path to the YAML file (default: .github/checkwise.yml)
  * @returns Typed CheckwiseCfg object
  * @throws Error if the file is missing, malformed, or invalid
  */
-export function loadConfig(path = '.github/scope-mate.yml'): CheckwiseCfg {
+export function loadConfig(path = '.github/checkwise.yml'): CheckwiseCfg {
   let raw: any;
   try {
     const file = fs.readFileSync(path, 'utf8');

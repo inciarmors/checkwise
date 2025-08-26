@@ -1,0 +1,74 @@
+# CheckWise Self-Validation Configuration
+# This file configures CheckWise to validate its own Pull Requests
+# Demonstrates real-world usage and ensures quality of the project itself
+
+checklists:
+  # Core TypeScript source code changes
+  - when: ["src/**/*.ts"]
+    require:
+      - "Unit tests added or updated for new functionality"
+      - "TypeScript compilation passes without errors"
+      - "Code follows project conventions and style"
+      - "JSDoc comments added for public functions"
+      - "Error handling is appropriate and tested"
+
+  # Test files changes
+  - when: ["__tests__/**/*.ts", "**/*.test.ts", "**/*.spec.ts"]
+    require:
+      - "Test coverage maintained or improved"
+      - "Test descriptions are clear and descriptive"
+      - "Tests cover both happy path and error cases"
+      - "Mock usage is appropriate and realistic"
+
+  # GitHub Actions workflow changes
+  - when: [".github/workflows/**/*.yml", ".github/workflows/**/*.yaml"]
+    require:
+      - "Workflow syntax validated locally"
+      - "Security implications reviewed (secrets, permissions)"
+      - "CI/CD pipeline tested on feature branch"
+      - "Performance impact considered (build time)"
+      - "Breaking changes documented"
+
+  # Configuration and build changes
+  - when: ["package.json", "package-lock.json", "tsconfig.json", "jest.config.js"]
+    require:
+      - "Dependencies security audit passed (npm audit)"
+      - "Version compatibility verified"
+      - "Build process tested locally"
+      - "Breaking changes documented in CHANGELOG"
+
+  # Documentation changes
+  - when: ["README.MD", "docs/**/*.md", "CONTRIBUTING.md", "SECURITY.md"]
+    require:
+      - "Documentation accuracy verified"
+      - "Examples tested and working"
+      - "Links validated (internal and external)"
+      - "Grammar and spelling checked"
+
+  # GitHub Action metadata
+  - when: ["action.yml"]
+    require:
+      - "Action inputs/outputs documented"
+      - "Branding and metadata appropriate"
+      - "Backward compatibility maintained"
+      - "Version bump planned if breaking changes"
+
+  # Example configurations
+  - when: ["examples/**/*.yml", "examples/**/*.yaml"]
+    require:
+      - "Example configuration tested and working"
+      - "Documentation reflects example usage"
+      - "YAML syntax validated"
+      - "Real-world applicability verified"
+
+  # Distribution files (compiled action)
+  - when: ["dist/**/*.js"]
+    require:
+      - "Built from latest source code (npm run build)"
+      - "Bundle size impact assessed"
+      - "No source maps or sensitive data included"
+      - "Minification successful without errors"
+
+# Global options
+options:
+  comment_header: "🔍 CheckWise Self-Validation Checklist"

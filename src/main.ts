@@ -3,7 +3,7 @@ import * as github from '@actions/github';
 import { loadConfig } from './config';
 import { getChangedFiles, findCheckwiseComment, createComment, updateComment } from './github';
 import { getMatchingRules } from './matcher';
-import { generateChecklistMarkdown } from './checklist';
+import { generateChecklistMarkdown, parseChecklistStateFromMarkdown } from './checklist';
 
 /**
  * Validates and normalizes the action inputs.
@@ -99,14 +99,19 @@ async function runAction({
   }
   core.info(`Matched rules: ${rules.length}`);
 
-  // 6. Generate checklist markdown (add hidden marker)
-  const checklist = `${marker}\n${generateChecklistMarkdown(rules)}`;
+  // 6. Generate checklist markdown (add hidden marker), preserving checked state if possible
+  const existing = await findCheckwiseComment(token, prNumber, marker);
+  let previousState: Record<string, boolean> | undefined = undefined;
+  if (existing && existing.body) {
+    // Parse previous checklist state from the existing comment
+    previousState = parseChecklistStateFromMarkdown(existing.body);
+  }
+  const checklist = `${marker}\n${generateChecklistMarkdown(rules, previousState)}`;
 
   // 7. Manage PR comment (idempotent)
-  const existing = await findCheckwiseComment(token, prNumber, marker);
   if (existing) {
     await updateComment(token, existing.id, checklist);
-    core.info('Checklist updated in the existing comment.');
+    core.info('Checklist updated in the existing comment, preserving checked state.');
   } else {
     await createComment(token, prNumber, checklist);
     core.info('Checklist created as a new comment.');

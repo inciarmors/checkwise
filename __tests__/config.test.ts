@@ -400,7 +400,7 @@ checklists:
       
       const config = loadConfig(); // No path provided
   expect(config.checklists).toHaveLength(1);
-  expect(mockReadFileSync).toHaveBeenCalledWith('.github/scope-mate.yml', 'utf8');
+  expect(mockReadFileSync).toHaveBeenCalledWith('.github/checkwise.yml', 'utf8');
     });
   });
 
