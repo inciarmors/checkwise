@@ -86,7 +86,6 @@ jobs:
     - name: Build and verify
       run: |
         npm run build
-        npm run package
         
         # Verify no source maps leaked into the build
         if npm run build:check 2>&1 | grep -q "Source map files detected"; then
