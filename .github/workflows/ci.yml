@@ -63,7 +63,8 @@ jobs:
   self-validation:
     runs-on: ubuntu-latest
     needs: test
-    # Always run self-validation - it's fast and critical for CheckWise quality
+    if: github.event_name == 'pull_request'
+    # Self-validation only makes sense for PRs since CheckWise is a PR tool
     
     steps:
     - name: Checkout code
@@ -97,14 +98,99 @@ jobs:
     
     - name: Verify self-validation success
       run: |
-        echo "✅ Self-validation successful! CheckWise can validate its own changes."
-        echo "This confirms CheckWise is working correctly on every commit."
+        echo "✅ Self-validation successful! CheckWise can validate its own PRs."
+        echo "This confirms CheckWise works correctly in its intended context."
+
+  # Build validation for push events (no PR context required)
+  # Validates the build, action structure, and examples without running CheckWise
+  build-validation:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+    
+    - name: Install dependencies with fallback
+      run: |
+        npm ci || {
+          echo "npm ci failed, clearing cache and retrying..."
+          npm cache clean --force
+          npm install
+        }
+    
+    - name: Build and verify
+      run: |
+        npm run build
+        npm run package
+        
+        # Verify no source maps leaked into the build
+        if npm run build:check 2>&1 | grep -q "Source map files detected"; then
+          echo "❌ Build check failed: Source maps detected in distribution"
+          exit 1
+        else
+          echo "✅ Build verification passed: No source maps in distribution"
+        fi
+    
+    - name: Validate action.yml structure
+      run: |
+        node -e "
+          const yaml = require('js-yaml');
+          const fs = require('fs');
+          try {
+            const actionYml = yaml.load(fs.readFileSync('action.yml', 'utf8'));
+            if (!actionYml.name || !actionYml.description || !actionYml.inputs || !actionYml.runs) {
+              throw new Error('Missing required action.yml fields');
+            }
+            console.log('✅ action.yml structure validation passed');
+          } catch (error) {
+            console.error('❌ action.yml validation failed:', error.message);
+            process.exit(1);
+          }
+        "
+    
+    - name: Validate example configurations
+      run: |
+        node -e "
+          const yaml = require('js-yaml');
+          const fs = require('fs');
+          const path = require('path');
+          
+          const examplesDir = 'examples';
+          const files = fs.readdirSync(examplesDir).filter(f => f.endsWith('.yml'));
+          
+          for (const file of files) {
+            try {
+              const filePath = path.join(examplesDir, file);
+              const content = fs.readFileSync(filePath, 'utf8');
+              yaml.load(content);
+              console.log('✅', file, 'validation passed');
+            } catch (error) {
+              console.error('❌', file, 'validation failed:', error.message);
+              process.exit(1);
+            }
+          }
+        "
+    
+    - name: Build validation summary
+      run: |
+        echo "🎯 Build validation completed for push event"
+        echo "✅ TypeScript compilation verified"
+        echo "✅ Bundle packaging verified"
+        echo "✅ No source maps in distribution"
+        echo "✅ Action.yml structure validated"
+        echo "✅ Example configurations validated"
 
   comprehensive-integration:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'pull_request'
-    # Only run comprehensive tests for PRs to save resources
+    # Comprehensive testing only for PRs - includes self-validation and extensive scenarios
     
     steps:
     - name: Checkout code
