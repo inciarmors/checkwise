@@ -27,6 +27,9 @@ dist/*.d.ts
 dist/*.d.ts.map
 *.js.map
 *.d.ts.map
+**/*.map
+**/*.js.map
+**/*.ts.map
 
 # Cache e file temporanei
 .npm

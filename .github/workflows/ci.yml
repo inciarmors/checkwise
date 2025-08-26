@@ -69,7 +69,7 @@ jobs:
         npm run build
     
     # SELF-VALIDATION: Test CheckWise on itself (critical validation)
-    - name: � Self-Validation - CheckWise validates itself
+    - name: Self-Validation - CheckWise validates itself
       uses: ./
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -78,7 +78,7 @@ jobs:
     
     - name: Verify self-validation success
       run: |
-        echo "✅ Self-validation successful! CheckWise can validate its own PRs."
+        echo "Self-validation successful! CheckWise can validate its own PRs."
         echo "This is the ultimate integration test."
     
     - name: Test action with comprehensive config
@@ -179,9 +179,18 @@ jobs:
     - name: Clean build
       run: npm run clean || true
     
-    - name: Fresh build
-      run: npm run build
+    - name: Fresh build with verification
+      run: npm run build:check
     
+    - name: Debug build output
+      run: |
+        echo "Contents of dist directory:"
+        ls -la dist/
+        echo "All files in dist (including hidden):"
+        find dist/ -type f -exec ls -la {} \;
+        echo "Checking for any .map files:"
+        find dist/ -name "*.map" -exec ls -la {} \; || echo "No .map files found"
+
     - name: Verify build artifacts
       run: |
         # Check that required files exist
@@ -204,8 +213,11 @@ jobs:
         fi
 
         # Check for source maps in dist (should be excluded)
-        if find dist/ -name "*.map" 2>/dev/null | head -1; then
+        echo "Checking for source map files in dist/"
+        if find dist/ -name "*.js.map" -o -name "*.ts.map" -o -name "*.d.ts.map" 2>/dev/null | head -1; then
           echo "Source map files found in dist/ (security risk)"
+          echo "Found files:"
+          find dist/ -name "*.js.map" -o -name "*.ts.map" -o -name "*.d.ts.map" 2>/dev/null || true
           exit 1
         fi
 
