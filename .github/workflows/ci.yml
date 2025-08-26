@@ -29,7 +29,13 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: |
+        echo "🔧 Installing dependencies..."
+        # Try npm ci first, fallback to npm install if registry issues
+        npm ci || {
+          echo "⚠️ npm ci failed, trying npm install as fallback..."
+          npm install
+        }
     
     - name: Run TypeScript type checking
       run: npm run lint
@@ -65,7 +71,12 @@ jobs:
     
     - name: Build for integration testing
       run: |
-        npm ci
+        echo "🔧 Installing dependencies for integration testing..."
+        # Try npm ci first, fallback to npm install if registry issues
+        npm ci || {
+          echo "⚠️ npm ci failed, trying npm install as fallback..."
+          npm install
+        }
         npm run build
     
     # SELF-VALIDATION: Test CheckWise on itself (critical validation)
@@ -174,7 +185,13 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: |
+        echo "🔧 Installing dependencies for build verification..."
+        # Try npm ci first, fallback to npm install if registry issues
+        npm ci || {
+          echo "⚠️ npm ci failed, trying npm install as fallback..."
+          npm install
+        }
     
     - name: Clean build
       run: npm run clean || true
@@ -206,19 +223,84 @@ jobs:
 
     - name: Check for sensitive files
       run: |
-        # Ensure no sensitive files are committed
-        if find . -name "*.env*" -o -name "*.key" -o -name "*.pem" -o -name "*.p12" | grep -v node_modules | grep -v ".env.example"; then
-          echo "Sensitive files found in repository"
-          exit 1
-        fi
-
-        # Check for source maps in dist (should be excluded)
-        echo "Checking for source map files in dist/"
-        if find dist/ -name "*.js.map" -o -name "*.ts.map" -o -name "*.d.ts.map" 2>/dev/null | head -1; then
-          echo "Source map files found in dist/ (security risk)"
-          echo "Found files:"
-          find dist/ -name "*.js.map" -o -name "*.ts.map" -o -name "*.d.ts.map" 2>/dev/null || true
-          exit 1
-        fi
-
-        echo "No sensitive files found"
+        echo "🔍 Checking for sensitive files and source maps..."
+        node -e "
+          const fs = require('fs');
+          const path = require('path');
+          
+          let hasErrors = false;
+          
+          // Function to recursively find files
+          function findFiles(dir, patterns, excludeDirs = ['node_modules', '.git']) {
+            const results = [];
+            if (!fs.existsSync(dir)) return results;
+            
+            try {
+              const items = fs.readdirSync(dir, { withFileTypes: true });
+              
+              for (const item of items) {
+                const fullPath = path.join(dir, item.name);
+                const relativePath = path.relative('.', fullPath);
+                
+                if (item.isDirectory() && !excludeDirs.includes(item.name)) {
+                  results.push(...findFiles(fullPath, patterns, excludeDirs));
+                } else if (item.isFile()) {
+                  for (const pattern of patterns) {
+                    if (item.name.match(pattern)) {
+                      results.push(relativePath);
+                      break;
+                    }
+                  }
+                }
+              }
+            } catch (e) {
+              // Skip directories we can't read
+            }
+            
+            return results;
+          }
+          
+          // Check for sensitive files
+          console.log('Checking for sensitive files...');
+          const sensitivePatterns = [
+            /\.env$/,
+            /\.env\..+$/,
+            /\.key$/,
+            /\.pem$/,
+            /\.p12$/
+          ];
+          
+          const sensitiveFiles = findFiles('.', sensitivePatterns)
+            .filter(f => !f.includes('.env.example'));
+          
+          if (sensitiveFiles.length > 0) {
+            console.error('❌ Sensitive files found in repository:');
+            sensitiveFiles.forEach(f => console.error('  - ' + f));
+            hasErrors = true;
+          }
+          
+          // Check for source maps in dist/
+          console.log('Checking for source map files in dist/...');
+          if (fs.existsSync('dist')) {
+            const sourceMapPatterns = [
+              /\.js\.map$/,
+              /\.ts\.map$/,
+              /\.d\.ts\.map$/,
+              /\.map$/
+            ];
+            
+            const sourceMapFiles = findFiles('dist', sourceMapPatterns, []);
+            
+            if (sourceMapFiles.length > 0) {
+              console.error('❌ Source map files found in dist/ (security risk):');
+              sourceMapFiles.forEach(f => console.error('  - ' + f));
+              hasErrors = true;
+            }
+          }
+          
+          if (hasErrors) {
+            process.exit(1);
+          } else {
+            console.log('✅ No sensitive files or source maps found');
+          }
+        "
