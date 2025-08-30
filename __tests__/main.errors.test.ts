@@ -40,8 +40,6 @@ describe('main.ts error handling', () => {
   expect(core.setFailed).toHaveBeenCalledWith(expect.stringContaining('Unable to determine the Pull Request number'));
   });
 
-  // Test on configuration error removed: unreliable without DI refactoring
-
   // Test for specific branches of validateInputs
   describe('validateInputs edge cases', () => {
     let originalConsoleError: any;

@@ -24,25 +24,49 @@ export function parseChecklistStateFromMarkdown(markdown: string): Record<string
  * @param previousState Optional: map of checklist item text to checked state
  * @returns Markdown string ready to be inserted in a PR comment
  */
+import { CheckwiseCfg } from './config';
+
+/**
+ * Replaces the variables {{var}} in a template string.
+ */
+function applyTemplate(template: string, vars: Record<string, string>): string {
+  return template.replace(/{{\s*(\w+)\s*}}/g, (_, key) => vars[key] ?? '');
+}
+
+/**
+ * Generates the markdown checklist using global and/or per-rule custom templates.
+ * Supported variables: {{ruleTitle}}, {{items}}, {{index}}
+ */
 export function generateChecklistMarkdown(
   rules: ChecklistRule[],
-  previousState?: Record<string, boolean>
+  previousState?: Record<string, boolean>,
+  globalTemplate?: string
 ): string {
   if (!rules.length) {
     return '_No checklist required for the files changed in this PR._';
   }
 
-  let md = '## Automated Checklist\n\n';
+  let md = '';
   rules.forEach((rule, idx) => {
-    if (rules.length > 1) {
-      md += `**Rule #${idx + 1}:**\n`;
-    }
-    rule.require.forEach(item => {
-      // If previous state exists and item was checked, preserve it
+    // Determines the template to use: per-rule > global > default
+    const template = rule.template || globalTemplate;
+    // Generates the markdown checklist items
+    const itemsMd = rule.require.map(item => {
       const checked = previousState && previousState[item.trim()] === true;
-      md += `- [${checked ? 'x' : ' '}] ${item}\n`;
-    });
-    md += '\n';
+      return `- [${checked ? 'x' : ' '}] ${item}`;
+    }).join('\n');
+    if (template) {
+      md += applyTemplate(template, {
+        ruleTitle: rules.length > 1 ? `Rule #${idx + 1}` : '',
+        items: itemsMd,
+        index: String(idx + 1)
+      }) + '\n\n';
+    } else {
+      if (rules.length > 1) {
+        md += `**Rule #${idx + 1}:**\n`;
+      }
+      md += itemsMd + '\n\n';
+    }
   });
   return md.trim();
 }

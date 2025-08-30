@@ -460,4 +460,52 @@ options:
       });
     });
   });
+
+  describe('Priority and template validation', () => {
+    it('should reject non-integer priority', () => {
+      mockReadFileSync.mockReturnValue(`
+checklists:
+  - when: ["src/**"]
+    require: ["Test"]
+    priority: 1.5
+`);
+      expect(() => loadConfig('bad-priority.yml')).toThrow(
+        'Checklist rule #1 in "bad-priority.yml": "priority" must be an integer >= 0. Found: 1.5'
+      );
+    });
+    it('should reject negative priority', () => {
+      mockReadFileSync.mockReturnValue(`
+checklists:
+  - when: ["src/**"]
+    require: ["Test"]
+    priority: -1
+`);
+      expect(() => loadConfig('neg-priority.yml')).toThrow(
+        'Checklist rule #1 in "neg-priority.yml": "priority" must be an integer >= 0. Found: -1'
+      );
+    });
+    it('should reject non-string template in rule', () => {
+      mockReadFileSync.mockReturnValue(`
+checklists:
+  - when: ["src/**"]
+    require: ["Test"]
+    template: 123
+`);
+      expect(() => loadConfig('bad-template.yml')).toThrow(
+        'Checklist rule #1 in "bad-template.yml": "template" must be a string if provided.'
+      );
+    });
+    it('should reject non-string template in options', () => {
+      mockReadFileSync.mockReturnValue(`
+checklists:
+  - when: ["src/**"]
+    require: ["Test"]
+options:
+  template: 123
+`);
+      expect(() => loadConfig('bad-opt-template.yml')).toThrow(
+        'Config YAML in "bad-opt-template.yml": options.template must be a string if provided.'
+      );
+    });
+  });
 });

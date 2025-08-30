@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import { loadConfig } from './config';
+import { loadConfig, CheckwiseCfg } from './config';
 import { getChangedFiles, findCheckwiseComment, createComment, updateComment, setCommitStatus as realSetCommitStatus } from './github';
 import { getMatchingRules } from './matcher';
 import { generateChecklistMarkdown, parseChecklistStateFromMarkdown } from './checklist';
@@ -108,7 +108,9 @@ async function runAction({
     // Parse previous checklist state from the existing comment
     previousState = parseChecklistStateFromMarkdown(existing.body);
   }
-  const checklist = `${marker}\n${generateChecklistMarkdown(rules, previousState)}`;
+  // Passa il template globale se presente
+  const globalTemplate = config.options && typeof config.options.template === 'string' ? config.options.template : undefined;
+  const checklist = `${marker}\n${generateChecklistMarkdown(rules, previousState, globalTemplate)}`;
 
   // 7. Manage PR comment (idempotent)
   if (existing) {

@@ -1,20 +1,63 @@
+import { generateChecklistMarkdown } from '../src/checklist';
+describe('generateChecklistMarkdown (custom template)', () => {
+  const rulesWithTemplate: ChecklistRule[] = [
+    {
+      when: ['src/**/*.ts'],
+      require: ['A', 'B'],
+      priority: 1,
+      template: '### Custom Rule\n{{items}}'
+    },
+    {
+      when: ['infra/**'],
+      require: ['C'],
+      priority: 2
+    }
+  ];
+  it('applies per-rule template if present', () => {
+    const md = generateChecklistMarkdown([rulesWithTemplate[0]], undefined);
+    expect(md).toContain('### Custom Rule');
+    expect(md).toContain('- [ ] A');
+    expect(md).toContain('- [ ] B');
+  });
+  it('applies global template if per-rule template is missing', () => {
+    const md = generateChecklistMarkdown([rulesWithTemplate[1]], undefined, '## Global\n{{items}}');
+    expect(md).toContain('## Global');
+    expect(md).toContain('- [ ] C');
+  });
+  it('falls back to default if no template is present', () => {
+    const rule = { when: ['docs/**'], require: ['D'] };
+    const md = generateChecklistMarkdown([rule], undefined);
+    expect(md).toContain('- [ ] D');
+  });
+});
 import { getMatchingRules } from '../src/matcher';
 import { ChecklistRule } from '../src/config';
 
 const rules: ChecklistRule[] = [
   {
     when: ['src/**/*.ts'],
-    require: ['Action on TypeScript file']
+    require: ['Action on TypeScript file'],
+    priority: 2
   },
   {
     when: ['infra/**', '!infra/**/*.md'],
-    require: ['Check infrastructure changes']
+    require: ['Check infrastructure changes'],
+    priority: 1
   },
   {
     when: ['docs/**'],
-    require: ['Update documentation']
+    require: ['Update documentation'],
+    priority: 3
   }
 ];
+  it('orders matched rules by priority (lowest first)', () => {
+    const files = ['src/index.ts', 'infra/main.tf', 'docs/intro.md'];
+    const matched = getMatchingRules(files, rules);
+    expect(matched.length).toBe(3);
+    expect(matched[0].require[0]).toBe('Check infrastructure changes');
+    expect(matched[1].require[0]).toBe('Action on TypeScript file');
+    expect(matched[2].require[0]).toBe('Update documentation');
+  });
 
 describe('getMatchingRules', () => {
   it('matches correct rules for TypeScript files', () => {
@@ -27,7 +70,6 @@ describe('getMatchingRules', () => {
   it('matches rules with negation pattern', () => {
     const files = ['infra/main.tf', 'infra/readme.md'];
     const matched = getMatchingRules(files, rules);
-    // Should match only if at least one file is NOT excluded by the negation pattern
     expect(matched.length).toBe(1);
     expect(matched[0].require[0]).toBe('Check infrastructure changes');
   });

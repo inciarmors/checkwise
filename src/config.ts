@@ -10,16 +10,23 @@ export interface CheckwiseCfg {
     label_filter?: string[];
     branch_pattern?: string;
     comment_header?: string;
+    template?: string; // Custom global markdown template
   };
 }
 
 /**
  * Represents a checklist rule.
  */
+/**
+ * Represents a checklist rule.
+ * @property priority (opzionale) - numero intero >= 0, regole con priorità più bassa hanno precedenza
+ */
 export interface ChecklistRule {
   when: string[];      // Glob patterns of files to match
   require: string[];   // Required checklist items
   optional?: boolean;  // Whether the rule is optional
+  priority?: number;   // Lower number = higher priority (default: 1000)
+  template?: string;   // Custom markdown template for this rule
 }
 
 /**
@@ -117,6 +124,14 @@ export function loadConfig(paths = '.github/checkwise.yml'): CheckwiseCfg {
       if (rule.optional !== undefined && typeof rule.optional !== 'boolean') {
         throw new Error(`${ruleContext}: "optional" must be true/false. Found: ${typeof rule.optional}`);
       }
+      if (rule.priority !== undefined) {
+        if (typeof rule.priority !== 'number' || !Number.isInteger(rule.priority) || rule.priority < 0) {
+          throw new Error(`${ruleContext}: "priority" must be an integer >= 0. Found: ${rule.priority}`);
+        }
+      }
+      if (rule.template !== undefined && typeof rule.template !== 'string') {
+        throw new Error(`${ruleContext}: "template" must be a string if provided.`);
+      }
     }
 
     // Global options validation if present
@@ -142,6 +157,10 @@ export function loadConfig(paths = '.github/checkwise.yml'): CheckwiseCfg {
       }
       // Merge options: later files override earlier
       mergedOptions = { ...mergedOptions, ...raw.options };
+      // Validazione template globale dopo il merge
+      if (mergedOptions.template !== undefined && typeof mergedOptions.template !== 'string') {
+        throw new Error(`Config YAML in "${path}": options.template must be a string if provided.`);
+      }
     }
 
     mergedChecklists = mergedChecklists.concat(raw.checklists);

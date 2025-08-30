@@ -155,7 +155,7 @@ Checkwise provides detailed logs for debugging:
 
 ```yaml
 # Workflow with debug enabled
-- uses: your-username/checkwise@v1
+- uses: inciarmors/checkwise@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
   env:

@@ -71,4 +71,4 @@ checklists:
 
 # Global options
 options:
-  comment_header: "🔍 CheckWise Self-Validation Checklist"
+  comment_header: "CheckWise Self-Validation Checklist"

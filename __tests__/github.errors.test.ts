@@ -82,4 +82,25 @@ describe('github.ts error handling', () => {
     jest.spyOn(github, 'getOctokit').mockReturnValue(octokit as any);
     await expect(githubModule.updateComment('token', 1, 'body')).rejects.toThrow('update error');
   });
+
+  it('setCommitStatus: handles error from octokit', async () => {
+    const octokit = {
+      rest: {
+        pulls: { get: jest.fn().mockRejectedValue(new Error('pull error')) },
+        repos: { createCommitStatus: jest.fn() }
+      }
+    };
+    jest.spyOn(github, 'getOctokit').mockReturnValue(octokit as any);
+    await expect(githubModule.setCommitStatus('token', 1, 'success', 'desc')).rejects.toThrow('pull error');
+  });
+  it('setCommitStatus: handles error from createCommitStatus', async () => {
+    const octokit = {
+      rest: {
+        pulls: { get: jest.fn().mockResolvedValue({ data: { head: { sha: 'sha' } } }) },
+        repos: { createCommitStatus: jest.fn().mockRejectedValue(new Error('status error')) }
+      }
+    };
+    jest.spyOn(github, 'getOctokit').mockReturnValue(octokit as any);
+    await expect(githubModule.setCommitStatus('token', 1, 'success', 'desc')).rejects.toThrow('status error');
+  });
 });

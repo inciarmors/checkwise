@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 
-// 1. Mock fs PRIMA di tutto!
+// 1. Mock fs 
 jest.mock('fs', () => {
   const originalFs = jest.requireActual('fs');
   return {

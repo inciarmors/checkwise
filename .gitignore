@@ -73,6 +73,7 @@ notes.md
 dev-notes/
 .development/
 development/
+PUBLICATION-GUIDE.md
 
 # Test fixtures temporanei (mantieni fixtures/ per esempi)
 fixtures/tmp/

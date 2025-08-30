@@ -30,10 +30,10 @@ jobs:
     
     - name: Install dependencies
       run: |
-        echo "🔧 Installing dependencies..."
+        echo "Installing dependencies..."
         # Try npm ci first, fallback to npm install if registry issues
         npm ci || {
-          echo "⚠️ npm ci failed, trying npm install as fallback..."
+          echo "npm ci failed, trying npm install as fallback..."
           npm install
         }
     
@@ -225,10 +225,10 @@ jobs:
     
     - name: Install dependencies
       run: |
-        echo "🔧 Installing dependencies for build verification..."
+        echo "Installing dependencies for build verification..."
         # Try npm ci first, fallback to npm install if registry issues
         npm ci || {
-          echo "⚠️ npm ci failed, trying npm install as fallback..."
+          echo "npm ci failed, trying npm install as fallback..."
           npm install
         }
     
@@ -262,7 +262,7 @@ jobs:
 
     - name: Check for sensitive files
       run: |
-        echo "🔍 Checking for sensitive files and source maps..."
+        echo "Checking for sensitive files and source maps..."
         node -e "
           const fs = require('fs');
           const path = require('path');

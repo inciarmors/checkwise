@@ -4,11 +4,11 @@
 
 [![GitHub Action](https://img.shields.io/badge/GitHub-Action-blue?logo=github-actions)](https://github.com/marketplace/actions/checkwise)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/Tests-129%20passed-green)](https://github.com/inciarmors/CheckWise/actions)
-[![Coverage](https://img.shields.io/badge/Coverage-79.3%25-brightgreen)](https://github.com/inciarmors/CheckWise/actions)
-[![Self-Validation](https://img.shields.io/badge/Self--Validation-✅%20Active-success)](https://github.com/inciarmors/CheckWise/actions/workflows/self-validation.yml)
+[![Tests](https://img.shields.io/badge/Tests-129%20passed-green)](https://github.com/inciarmors/checkwise/actions)
+[![Coverage](https://img.shields.io/badge/Coverage-79.3%25-brightgreen)](https://github.com/inciarmors/checkwise/actions)
+[![Self-Validation](https://img.shields.io/badge/Self--Validation-✅%20Active-success)](https://github.com/inciarmors/checkwise/actions/workflows/self-validation.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-[![Bundle Size](https://img.shields.io/badge/Bundle%20Size-690KB-orange)](https://github.com/inciarmors/CheckWise)
+[![Bundle Size](https://img.shields.io/badge/Bundle%20Size-690KB-orange)](https://github.com/inciarmors/checkwise)
 [![Node Version](https://img.shields.io/badge/Node-20+-brightgreen)](https://nodejs.org/)
 
 ---
@@ -63,7 +63,7 @@ jobs:
       statuses: write         # Status check permissions
     steps:
       - uses: actions/checkout@v4
-      - uses: crescenzo-cascone/checkwise@v1
+      - uses: inciarmors/checkwise@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           config-path: .github/checkwise.yml
@@ -72,15 +72,11 @@ jobs:
 
 ### Configuration Schema (JSON Schema Validated)
 ```yaml
-# .github/checkwise.yml - Full enterprise configuration
+# .github/checkwise.yml - Esempio con template markdown custom
 checklists:
   # Backend Service Layer
-  backend-api:
-    patterns: 
-      - 'src/api/**/*.{ts,js}'
-      - 'src/services/**/*.{ts,js}'
-      - 'src/database/**'
-    items:
+  - when: ['src/api/**/*.{ts,js}', 'src/services/**/*.{ts,js}', 'src/database/**']
+    require:
       - 'OpenAPI/Swagger documentation updated'
       - 'Database migration scripts reviewed'
       - 'Unit tests achieve >80% coverage'
@@ -88,51 +84,26 @@ checklists:
       - 'Security implications documented'
       - 'Performance impact measured (APM/profiling)'
       - 'Backward compatibility verified'
+    priority: 1
+    template: |
+      ### 🚀 {{ruleTitle}} (Backend)
+      {{items}}
 
-  # Frontend Component Layer  
-  frontend-ui:
-    patterns:
-      - 'src/components/**/*.{tsx,jsx,vue}'
-      - 'src/pages/**/*.{tsx,jsx,vue}'
-      - 'src/styles/**'
-    items:
+  # Frontend Component Layer
+  - when: ['src/components/**/*.{tsx,jsx,vue}', 'src/pages/**/*.{tsx,jsx,vue}', 'src/styles/**']
+    require:
       - 'Visual regression tests added/updated'
       - 'Accessibility compliance verified (WCAG 2.1 AA)'
       - 'Cross-browser testing completed (Chrome, Firefox, Safari)'
       - 'Mobile responsiveness validated (320px-1920px)'
       - 'Bundle size impact assessed (<5% increase)'
       - 'Loading states and error boundaries implemented'
+    priority: 2
 
-  # Infrastructure & DevOps
-  infrastructure:
-    patterns:
-      - 'terraform/**'
-      - 'k8s/**/*.{yaml,yml}'
-      - 'docker/**'
-      - '.github/workflows/**'
-    items:
-      - 'Terraform plan output reviewed and attached'
-      - 'Resource cost impact calculated'
-      - 'Security group/RBAC changes approved by InfoSec'
-      - 'Monitoring and alerting configured'
-      - 'Rollback procedure documented'
-      - 'Load testing completed for capacity changes'
-
-  # Security-Critical Changes
-  security-sensitive:
-    patterns:
-      - '**/*.env*'
-      - '**/secrets/**'
-      - '**/auth/**'
-      - '**/*password*'
-      - '**/*token*'
-    items:
-      - 'Security team review completed (@security-team)'
-      - 'No hardcoded credentials detected'
-      - 'Encryption at rest and in transit verified'
-      - 'Input validation and sanitization reviewed'
-      - 'OWASP Top 10 implications assessed'
-      - 'Vulnerability scan results attached'
+options:
+  template: |
+    ## 📝 Custom Global Checklist
+    {{items}}
 ```
 
 ### Enterprise Multi-Config Architecture
@@ -167,7 +138,7 @@ checklists:
 ### Status Check Integration
 ```yaml
 # Enable merge protection with completion enforcement
-- uses: crescenzo-cascone/checkwise@v1
+- uses: inciarmors/checkwise@v1
   with:
     github-token: ${{ secrets.GITHUB_TOKEN }}
     config-path: .github/checkwise.yml
@@ -513,9 +484,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/inciarmors/CheckWise/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/inciarmors/CheckWise/discussions)  
-- **Documentation**: [Wiki](https://github.com/inciarmors/CheckWise/wiki)
+- **Issues**: [GitHub Issues](https://github.com/inciarmors/checkwise/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/inciarmors/checkwise/discussions)  
+- **Documentation**: [Wiki](https://github.com/inciarmors/checkwise/wiki)
 
 ---
 

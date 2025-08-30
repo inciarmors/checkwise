@@ -36,4 +36,28 @@ describe('generateChecklistMarkdown', () => {
     expect(md).toContain('- [ ] Test coverage > 90%');
     expect(md).toContain('- [ ] Run terraform plan');
   });
+
+  it('falls back to default if no template is present', () => {
+    const rules: ChecklistRule[] = [
+      { when: ['src/**'], require: ['A'] }
+    ];
+    const md = generateChecklistMarkdown(rules, undefined);
+    expect(md).toContain('- [ ] A');
+  });
+  it('applies global template if per-rule template is missing', () => {
+    const rules: ChecklistRule[] = [
+      { when: ['src/**'], require: ['A'] }
+    ];
+    const md = generateChecklistMarkdown(rules, undefined, '## Global\n{{items}}');
+    expect(md).toContain('## Global');
+    expect(md).toContain('- [ ] A');
+  });
+  it('applies per-rule template if present', () => {
+    const rules: ChecklistRule[] = [
+      { when: ['src/**'], require: ['A'], template: '### Custom\n{{items}}' }
+    ];
+    const md = generateChecklistMarkdown(rules, undefined);
+    expect(md).toContain('### Custom');
+    expect(md).toContain('- [ ] A');
+  });
 });
