@@ -86,7 +86,7 @@ checklists:
       - 'Backward compatibility verified'
     priority: 1
     template: |
-      ### 🚀 {{ruleTitle}} (Backend)
+      ### {{ruleTitle}} (Backend)
       {{items}}
 
   # Frontend Component Layer
@@ -102,7 +102,7 @@ checklists:
 
 options:
   template: |
-    ## 📝 Custom Global Checklist
+    ## Custom Global Checklist
     {{items}}
 ```
 
@@ -324,22 +324,6 @@ Error: No valid checklists found in any config file.
     - "Authentication tested"
     - "Documentation published"
 ```
-
----
-
-## Comparison with Alternatives
-
-| Feature | Checkwise | Danger.js | PR Templates | Keyword-based Tools |
-|---------|-----------|-----------|--------------|-------------------|
-| **Configuration** | YAML declarative | JavaScript custom | Markdown static | Mixed approaches |
-| **File-based Logic** | Path matching | Programmable | Always same | Content scanning |
-| **Dynamic Checklists** | Based on files changed | Programmable | Static | Keyword-based |
-| **Multi-file Config** | ✅ Native support | ❌ Manual setup | ❌ Not supported | ❌ Not supported |
-| **Status Checks** | ✅ Built-in | ✅ Custom code | ❌ Not supported | ⚠️ Varies |
-| **Idempotent Updates** | ✅ Single comment | ❌ Multiple comments | N/A | ⚠️ Varies |
-| **Maintenance Overhead** | ⭐ Zero-code | ⚠️ JavaScript maintenance | ⭐ Minimal | ❌ Complex config |
-| **Performance** | ⭐ Fast path matching | ⚠️ Code execution | N/A | ❌ Slow content scan |
-| **False Positives** | ⭐ Precise on files | ⚠️ Depends on code | ❌ Always present | ❌ Keyword ambiguity |
 
 ---
 

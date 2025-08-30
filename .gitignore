@@ -74,7 +74,7 @@ dev-notes/
 .development/
 development/
 PUBLICATION-GUIDE.md
-
+TESTING-REACT-FORK.md
 # Test fixtures temporanei (mantieni fixtures/ per esempi)
 fixtures/tmp/
 fixtures/temp/
