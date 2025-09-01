@@ -4,9 +4,9 @@
 
 [![GitHub Action](https://img.shields.io/badge/GitHub-Action-blue?logo=github-actions)](https://github.com/marketplace/actions/checkwise)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tests](https://img.shields.io/badge/Tests-129%20passed-green)](https://github.com/inciarmors/checkwise/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/inciarmors/checkwise/ci.yml?branch=main&label=tests)](https://github.com/inciarmors/checkwise/actions)
 [![Coverage](https://img.shields.io/badge/Coverage-79.3%25-brightgreen)](https://github.com/inciarmors/checkwise/actions)
-[![Self-Validation](https://img.shields.io/badge/Self--Validation-✅%20Active-success)](https://github.com/inciarmors/checkwise/actions/workflows/self-validation.yml)
+[![Self-Validation](https://img.shields.io/badge/Self--Validation-%20Active-success)](https://github.com/inciarmors/checkwise/actions/workflows/self-validation.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![Bundle Size](https://img.shields.io/badge/Bundle%20Size-690KB-orange)](https://github.com/inciarmors/checkwise)
 [![Node Version](https://img.shields.io/badge/Node-20+-brightgreen)](https://nodejs.org/)

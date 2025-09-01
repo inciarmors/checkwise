@@ -16,3 +16,5 @@ runs:
 branding:
   icon: 'check-square'
   color: 'blue'
+  author: 'inciarmors'
+  description: 'Generate dynamic Pull Request checklists based on changed file paths using declarative YAML configuration'

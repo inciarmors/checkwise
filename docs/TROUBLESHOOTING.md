@@ -430,7 +430,7 @@ When reporting performance issues:
 
 For security vulnerabilities:
 - **Do not** create public issues
-- Email security concerns to: security@checkwise.dev
+- Email security concerns to: checkwise@proton.me
 - Include detailed reproduction steps
 - Allow time for responsible disclosure
 

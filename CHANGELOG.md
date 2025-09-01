@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented comprehensive security policy
 - Added security scanning to CI/CD pipeline
 
-## [1.0.0] - 2025-08-25
+## [1.0.0] - 2025-09-01
 
 ### Added
 - Initial release of CheckWise GitHub Action
