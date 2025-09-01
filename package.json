@@ -8,6 +8,7 @@
     "test:watch": "jest --watch",
     "build": "ncc build src/main.ts -o dist --minify --no-source-map-register && node -e \"const fs=require('fs'),path=require('path'); console.log('Files before rename:', fs.readdirSync('dist')); if(fs.existsSync('dist/index.js')){fs.renameSync('dist/index.js','dist/main.js');} const files=fs.readdirSync('dist'); console.log('Files after rename:', files); const mapFiles=files.filter(f=>f.endsWith('.map')||f.endsWith('.d.ts')||f.endsWith('.d.ts.map')); console.log('Map files to remove:', mapFiles); mapFiles.forEach(f=>{try{fs.unlinkSync(path.join('dist',f)); console.log('Removed:', f)}catch(e){console.log('Failed to remove:', f, e.message)}}); console.log('Final files:', fs.readdirSync('dist'))\"",
     "build:check": "npm run build && node -e \"const fs=require('fs'); const files=fs.readdirSync('dist'); const maps=files.filter(f=>f.endsWith('.map')); if(maps.length>0){console.error('❌ Source maps found:',maps); process.exit(1);} console.log('✅ Build verification passed - no source maps')\"",
+    "release": "npm run test && npm run build:check",
     "dev": "tsc --watch",
     "lint": "tsc --noEmit",
     "clean": "rimraf dist coverage"
