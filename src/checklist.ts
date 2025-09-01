@@ -35,12 +35,17 @@ function applyTemplate(template: string, vars: Record<string, string>): string {
 
 /**
  * Generates the markdown checklist using global and/or per-rule custom templates.
- * Supported variables: {{ruleTitle}}, {{items}}, {{index}}
+ * Supported variables: {{ruleTitle}}, {{items}}, {{index}}, {{ruleCount}}, {{fileCount}}, {{executionTime}}, {{comment_header}}
  */
 export function generateChecklistMarkdown(
   rules: ChecklistRule[],
   previousState?: Record<string, boolean>,
-  globalTemplate?: string
+  globalTemplate?: string,
+  templateVars?: {
+    fileCount?: number;
+    executionTime?: number;
+    comment_header?: string;
+  }
 ): string {
   if (!rules.length) {
     return '_No checklist required for the files changed in this PR._';
@@ -59,7 +64,11 @@ export function generateChecklistMarkdown(
       md += applyTemplate(template, {
         ruleTitle: rules.length > 1 ? `Rule #${idx + 1}` : '',
         items: itemsMd,
-        index: String(idx + 1)
+        index: String(idx + 1),
+        ruleCount: String(rules.length),
+        fileCount: String(templateVars?.fileCount || 0),
+        executionTime: String(templateVars?.executionTime || 0),
+        comment_header: templateVars?.comment_header || ''
       }) + '\n\n';
     } else {
       if (rules.length > 1) {

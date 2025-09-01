@@ -60,4 +60,29 @@ describe('generateChecklistMarkdown', () => {
     expect(md).toContain('### Custom');
     expect(md).toContain('- [ ] A');
   });
+
+  it('handles template variables with templateVars', () => {
+    const rules: ChecklistRule[] = [
+      { when: ['*.ts'], require: ['Test added'], template: '{{comment_header}}\nFiles: {{fileCount}}, Rules: {{ruleCount}}, Time: {{executionTime}}ms\n{{items}}' }
+    ];
+    const md = generateChecklistMarkdown(rules, undefined, undefined, {
+      fileCount: 5,
+      executionTime: 123,
+      comment_header: 'Test Header'
+    });
+    expect(md).toContain('Test Header');
+    expect(md).toContain('Files: 5');
+    expect(md).toContain('Rules: 1');
+    expect(md).toContain('Time: 123ms');
+    expect(md).toContain('- [ ] Test added');
+  });
+
+  it('handles missing templateVars gracefully', () => {
+    const rules: ChecklistRule[] = [
+      { when: ['*.ts'], require: ['Test added'], template: 'Files: {{fileCount}}, {{items}}' }
+    ];
+    const md = generateChecklistMarkdown(rules, undefined, undefined, undefined);
+    expect(md).toContain('Files: 0'); // Default fallback
+    expect(md).toContain('- [ ] Test added');
+  });
 });

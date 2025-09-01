@@ -102,6 +102,7 @@ async function runAction({
   core.info(`Matched rules: ${rules.length}`);
 
   // 6. Generate checklist markdown (add hidden marker), preserving checked state if possible
+  const startTime = Date.now();
   const existing = await findCheckwiseComment(token, prNumber, marker);
   let previousState: Record<string, boolean> | undefined = undefined;
   if (existing && existing.body) {
@@ -110,7 +111,12 @@ async function runAction({
   }
   // Passa il template globale se presente
   const globalTemplate = config.options && typeof config.options.template === 'string' ? config.options.template : undefined;
-  const checklist = `${marker}\n${generateChecklistMarkdown(rules, previousState, globalTemplate)}`;
+  const executionTime = Date.now() - startTime;
+  const checklist = `${marker}\n${generateChecklistMarkdown(rules, previousState, globalTemplate, {
+    fileCount: changedFiles.length,
+    executionTime: executionTime,
+    comment_header: config.options?.comment_header || ''
+  })}`;
 
   // 7. Manage PR comment (idempotent)
   if (existing) {
